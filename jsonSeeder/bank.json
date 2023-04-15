@@ -1,0 +1,82 @@
+[
+    {
+        "name": "BANK BRI",
+        "code": "002"
+    },
+    {
+        "name": "BANK MANDIRI",
+        "code": "008"
+    },
+    {
+        "name": "BANK BNI",
+        "code": "009"
+    },
+    {
+        "name": "PERMATA BANK",
+        "code": "013"
+    },
+    {
+        "name": "BANK BCA",
+        "code": "014"
+    },
+    {
+        "name": "BANK JABAR",
+        "code": "110"
+    },
+    {
+        "name": "BANK DKI",
+        "code": "111"
+    },
+    {
+        "name": "BANK JATENG",
+        "code": "113"
+    },
+    {
+        "name": "BANK JATIM",
+        "code": "114"
+    },
+    {
+        "name": "BANK SUMUT",
+        "code": "117"
+    },
+    {
+        "name": "BANK NAGARI",
+        "code": "118"
+    },
+    {
+        "name": "BANK RIAU",
+        "code": "119"
+    },
+    {
+        "name": "BANK SUMSEL",
+        "code": "120"
+    },
+    {
+        "name": "BANK LAMPUNG",
+        "code": "121"
+    },
+    {
+        "name": "BANK SULUT",
+        "code": "127"
+    },
+    {
+        "name": "BANK NTT",
+        "code": "130"
+    },
+    {
+        "name": "BANK MALUKU",
+        "code": "131"
+    },
+    {
+        "name": "BANK BENGKULU",
+        "code": "133"
+    },
+    {
+        "name": "BANK SULTRA",
+        "code": "135"
+    },
+    {
+        "name": "BANK TABUNGAN NEGARA (PERSERO)",
+        "code": "200"
+    }
+]
