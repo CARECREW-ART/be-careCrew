@@ -15,12 +15,12 @@ class MProvinceSeeder extends Seeder
     {
         $data = file_get_contents('./jsonSeeder/provinces.json');
         $dataJsonProvince = json_decode($data, true);
-        
-        foreach ($dataJsonProvince as $province){
+
+        foreach ($dataJsonProvince as $province) {
             MProvince::create([
                 'province_id' => $province['id'],
                 'province_name' => $province['name']
-            ]);    
+            ]);
         }
         //
     }

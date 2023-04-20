@@ -9,10 +9,8 @@ class MCity extends Model
 {
     use HasFactory;
 
-    
-
-    public function distric()
+    public function mDistrict()
     {
-        return $this->hasMany(MDistrict::class);
+        return $this->hasMany(MDistrict::class, 'city_id', 'city_id');
     }
 }

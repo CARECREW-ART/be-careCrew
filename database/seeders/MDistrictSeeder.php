@@ -14,23 +14,22 @@ class MdistrictSeeder extends Seeder
      */
     public function run(): void
     {
-        $data = file_get_contents('./jsonSeeder/districts.json');
-        $dataJsondistrict = json_decode($data, true);
+        $dataDistricts = file_get_contents('./jsonSeeder/districts.json');
+        $dataJsondistricts = json_decode($dataDistricts, true);
 
-        $dataCities = MCity::all();
-        //get MCity database
+        $dataCities = file_get_contents('./jsonSeeder/cities.json');
+        $dataJsonCities = json_decode($dataCities, true);
 
-        foreach ($dataJsondistrict as $district){
-            foreach ($dataCities as $Cities){
-             if ($district["regency_id"]==$Cities["city_id"]){
-                 Mdistrict::create([
-                     'city_id'=>$Cities['city_id'],
-                     'district_id' => $district['id'],
-                     'district_name' => $district['name']
-                 ]);        
-    }
+        foreach ($dataJsondistricts as $district) {
+            foreach ($dataJsonCities as $Cities) {
+                if ($district["regency_id"] == $Cities["id"]) {
+                    Mdistrict::create([
+                        'city_id' => $Cities['id'],
+                        'district_id' => $district['id'],
+                        'district_name' => $district['name']
+                    ]);
+                }
             }
         }
     }
 }
-    
