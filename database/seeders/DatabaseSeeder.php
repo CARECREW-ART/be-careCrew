@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Master\MBank;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
@@ -16,11 +15,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            MBank::class,
+            MBankSeeder::class,
             MProvinceSeeder::class,
             MCitySeeder::class,
             MDistrictSeeder::class,
-            MVillageSeeder::class
+            MVillageSeeder::class,
+            PostalZipSeeder::class
         ]);
     }
 }

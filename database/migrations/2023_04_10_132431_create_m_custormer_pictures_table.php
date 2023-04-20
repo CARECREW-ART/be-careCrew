@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Customer\MCustomer;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,10 +14,10 @@ return new class extends Migration
     {
         Schema::create('m_custormer_pictures', function (Blueprint $table) {
             $table->id("picture_id");
-            $table->unsignedBigInteger("customer_id");
+            $table->foreignIdFor(MCustomer::class, 'customer_id')->constrained('m_customers', 'customer_id');
             $table->text("picture_filename");
             $table->text("picture_imagename");
-            $table->text("picture_type");
+            $table->string("picture_mime", 8);
             $table->text("picture_path");
             $table->timestamps();
         });

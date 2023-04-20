@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,13 +14,12 @@ return new class extends Migration
     {
         Schema::create('m_customers', function (Blueprint $table) {
             $table->id("customer_id");
-            $table->char("customer_fullname",50);
-            $table->char("customer_nickname",50);
-            $table->char("customer_username",20);
-            $table->char("customer_email",50);
-            $table->char("customer_telp",50);
+            $table->foreignIdFor(User::class, 'user_id')->constrained('users', 'user_id');
+            $table->char("customer_fullname", 50);
+            $table->char("customer_nickname", 50);
+            $table->char("customer_username", 20)->unique();
+            $table->char("customer_telp", 16)->unique();
             $table->boolean("customer_gender");
-            $table->text("customer_password");
             $table->timestamps();
         });
     }

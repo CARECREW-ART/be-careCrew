@@ -17,20 +17,20 @@ class MCitySeeder extends Seeder
     {
         $data = file_get_contents('./jsonSeeder/cities.json');
         $dataJsonCity = json_decode($data, true);
-        
+
         $dataProvinces = MProvince::all();
         //get MProvince database
-        
-        foreach ($dataJsonCity as $city){
-           foreach ($dataProvinces as $Provinces){
-            if ($city["province_id"]==$Provinces["province_id"]){
-                MCity::create([
-                    'province_id'=>$Provinces['province_id'],
-                    'city_id' => $city['id'],
-                    'city_name' => $city['name']
-                ]);
+
+        foreach ($dataJsonCity as $city) {
+            foreach ($dataProvinces as $Provinces) {
+                if ($city["province_id"] == $Provinces["province_id"]) {
+                    MCity::create([
+                        'province_id' => $Provinces['province_id'],
+                        'city_id' => $city['id'],
+                        'city_name' => $city['name']
+                    ]);
+                }
             }
-           }    
         }
         //
     }

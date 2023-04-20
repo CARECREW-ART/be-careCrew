@@ -14,22 +14,24 @@ class MVillageSeeder extends Seeder
      */
     public function run(): void
     {
-        $data = file_get_contents('./jsonSeeder/villages.json');
-        $dataJsonVillage = json_decode($data, true);
-        
-        $dataDistrict = MDistrict::all();
-        //get MDistrict database
-        
-        foreach ($dataJsonVillage as $village){
-           foreach ($dataDistrict as $Districts){
-            if ($village["district_id"]==$Districts["district_id"]){
-                MVillage::create([
-                    'district_id'=>$Districts['district_id'],
-                    'village_id' => $village['id'],
-                    'village_name' => $village['name']
-                ]);
+        $dataVillage = file_get_contents('./jsonSeeder/villages.json');
+        $dataJsonVillage = json_decode($dataVillage, true);
+
+        $dataDistrict = file_get_contents('./jsonSeeder/districts.json');
+        $dataJsonDistrict = json_decode($dataDistrict, true);
+
+
+
+        foreach ($dataJsonVillage as $village) {
+            foreach ($dataJsonDistrict as $District) {
+                if ($village["district_id"] == $District["id"]) {
+                    MVillage::create([
+                        'district_id' => $District['id'],
+                        'village_id' => $village['id'],
+                        'village_name' => $village['name']
+                    ]);
+                }
             }
-           }    
         }
         //
     }
