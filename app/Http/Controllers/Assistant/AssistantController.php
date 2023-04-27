@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Assistant;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Assistant\AssistantPostRequest;
 use App\Services\Assistant\AssistantService;
-use Illuminate\Http\Request;
 
 class AssistantController extends Controller
 {
@@ -17,9 +17,9 @@ class AssistantController extends Controller
         $this->assistantService = $assistantService;
     }
 
-    public function createAssistant(Request $req)
+    public function createAssistant(AssistantPostRequest $req)
     {
-        $dataAssistantValidated = $req['assistant'];
-        return $this->assistantService->createAssistant($dataAssistantValidated);
+        $dataAssistantValidated = $req->validated();
+        return $dataAssistantValidated;
     }
 }

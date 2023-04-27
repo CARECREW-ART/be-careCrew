@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
-    public function createUser($email, $password)
+    public function createUser($email, $password, $role)
     {
         $hashedPassword = Hash::make($password, ['rounds' => 12]);
         try {
