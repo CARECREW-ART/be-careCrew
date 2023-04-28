@@ -10,6 +10,7 @@ class MAssistant extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'assistant_fullname',
         'assistant_nickname',
         'assistant_username',
@@ -22,4 +23,6 @@ class MAssistant extends Model
         'assistant_password',
         'assistant_isactive'
     ];
+
+    protected $primaryKey = 'assistant_id';
 }
