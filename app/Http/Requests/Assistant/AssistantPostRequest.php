@@ -29,19 +29,26 @@ class AssistantPostRequest extends FormRequest
             'assistant.assistant_username' => 'required|min:6|max:20|unique:m_assistants,assistant_username',
             'assistant.assistant_telp' => 'required|max:16',
             'assistant.assistant_gender' => 'required|boolean',
-            'assistant.assistant_birthdate' => 'required|date',
+            'assistant.assistant_birthdate' => [
+                'required',
+                'date',
+                'date_format:Y-m-d',
+                'before_or_equal:' . date("Y-m-d", strtotime("-18 year")),
+                'after_or_equal:' . date("Y-m-d", strtotime("-55 year"))
+            ],
             'assistant.assistant_salary' => 'required|numeric',
             'assistant.assistant_experience' => 'required|min:50',
             'assistant.assistant_isactive' => 'required|boolean',
-            'assistant.assistant_address.province_id' => 'exists:m_provinces,province_id|nullable',
-            'assistant.assistant_address.city_id' => 'exists:m_cities,city_id|nullable',
-            'assistant.assistant_address.district_id' => 'exists:m_districts,district_id|nullable',
-            'assistant.assistant_address.village_id' => 'exists:m_villages,village_id|nullable',
-            'assistant.assistant_address.postalzip_id' => 'exists:m_postalzips,postalzip_id|nullable',
-            'assistant.assistant_address.address_street' => 'required|min:20',
-            'assistant.assistant_address.address_other' => 'nullable',
-            'assistant.assistant_skill.*.skill_name' => 'required|string',
-            'assistant.assistant_picture' => 'nullable|mimes:jpeg,jpg,png|min:30|max:1024'
+            'assistant_address.province_id' => 'exists:m_provinces,province_id|nullable',
+            'assistant_address.city_id' => 'exists:m_cities,city_id|nullable',
+            'assistant_address.district_id' => 'exists:m_districts,district_id|nullable',
+            'assistant_address.village_id' => 'exists:m_villages,village_id|nullable',
+            'assistant_address.postalzip_id' => 'exists:m_postalzips,postalzip_id|nullable',
+            'assistant_address.address_street' => 'required|min:20',
+            'assistant_address.address_other' => 'nullable',
+            'assistant_skill.*.skill_name' => 'required|string',
+            'assistant_accbank.bank_id' => 'required|exists:m_banks,bank_id',
+            'assistant_picture' => 'nullable|mimes:jpeg,jpg,png|min:30|max:1024'
         ];
     }
 
@@ -58,15 +65,16 @@ class AssistantPostRequest extends FormRequest
             'assistant.assistant_birthdate' => 'Tanggal Lahir',
             'assistant.assistant_salary' => 'Gaji',
             'assistant.assistant_experience' => 'Pengalaman',
-            'assistant.assistant_address.province_id' => 'ID Provinsi',
-            'assistant.assistant_address.city_id' => 'ID Kota / Kabupaten',
-            'assistant.assistant_address.district_id' => 'ID Kecamatan',
-            'assistant.assistant_address.village_id' => 'ID Keluharan / Desa',
-            'assistant.assistant_address.postalzip_id' => 'ID Kode Pos',
-            'assistant.assistant_address.address_street' => 'Alamat Lengkap',
-            'assistant.assistant_address.address_other' => 'Alamat Lainnya',
-            'assistant.assistant_skill.*.skill_name' => 'Skill',
-            'assistant.assistant_picture' => 'Foto Profil'
+            'assistant_address.province_id' => 'Provinsi',
+            'assistant_address.city_id' => 'Kota / Kabupaten',
+            'assistant_address.district_id' => 'Kecamatan',
+            'assistant_address.village_id' => 'Keluharan / Desa',
+            'assistant_address.postalzip_id' => 'Kode Pos',
+            'assistant_address.address_street' => 'Alamat Lengkap',
+            'assistant_address.address_other' => 'Alamat Lainnya',
+            'assistant_skill.*.skill_name' => 'Skill',
+            'assistant_picture' => 'Foto Profil',
+            'assistant_accbank.bank_id' => 'Bank'
         ];
     }
 }
