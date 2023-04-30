@@ -6,7 +6,7 @@ use App\Models\Assistant\MAssistant;
 use App\Models\Assistant\MAssistantAccbank;
 use App\Models\Assistant\MAssistantAddress;
 use App\Models\Assistant\MAssistantPicture;
-use App\Models\Assistant\MAssistantSkill;
+use Illuminate\Support\Facades\Storage;
 use App\Services\User\UserService;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +30,6 @@ class AssistantService
         $dataAssistant = $data['assistant'];
         $dataAssistantAddrs = $data['assistant_address'];
         $dataAssistantBank = $data['assistant_accbank'];
-        $dataAssistantSkill = $data['assistant_skill'];
         $profilePhoto = $data['assistant_picture'];
 
         $emailUser = $dataAssistant['assistant_email'];
@@ -52,6 +51,7 @@ class AssistantService
                 'assistant_salary' => $dataAssistant['assistant_salary'],
                 'assistant_experience' => $dataAssistant['assistant_experience'],
                 'assistant_isactive' => $dataAssistant['assistant_isactive'],
+                'assistant_skills' => $dataAssistant['assistant_skills']
             ]);
 
             $assistantId = $dataMAssistant->assistant_id;
@@ -74,25 +74,19 @@ class AssistantService
                 'accbank_value' => $dataAssistantBank['accbank_value']
             ]);
 
-            foreach ($dataAssistantSkill as $dASkill) {
-                MAssistantSkill::create([
-                    'assistant_id' => $assistantId,
-                    'skill_name' => $dASkill['skill_name']
-                ]);
-            }
-
             //Link Photo to Storage
             $photoNameExt = $profilePhoto->getClientOriginalName();
             $extention = $profilePhoto->extension();
             $file_name = (Str::random(16) . '.' . $extention);
-            $path = $profilePhoto->move('./storage/photoAssistant', $file_name);
+            $profilePhoto->move('./storage/photoAssistant', $file_name);
+            $url = Storage::url("/photoAssistant/" . $file_name);
 
             MAssistantPicture::create([
                 'assistant_id' => $assistantId,
                 'picture_filename' => $file_name,
                 'picture_imagename' => $photoNameExt,
                 'picture_mime' => $extention,
-                'picture_path' => $path
+                'picture_path' => $url
             ]);
 
             DB::commit();
@@ -217,8 +211,6 @@ class AssistantService
 
     public function getDetailAssistantById($username)
     {
-        // return $username;
-
         $dataAssistant = MAssistant::with([
             'mAssistantPicture' => function ($assistantPicture) {
                 $assistantPicture->select(
@@ -264,5 +256,9 @@ class AssistantService
         return $dataAssistant;
 
         return $dataCityAssistant;
+    }
+
+    public function putDetailAssistant()
+    {
     }
 }

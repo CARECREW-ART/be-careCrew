@@ -32,6 +32,7 @@ Route::controller(AssistantController::class)->group(function () {
     Route::post('/assistant', 'createAssistant');
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('assistant/profile/settings', 'getAssistantByUserId');
+        Route::put('assistant/profile/settings', 'putAssistantByUserId');
     });
 });
 

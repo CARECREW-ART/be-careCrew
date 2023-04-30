@@ -23,6 +23,7 @@ return new class extends Migration
             $table->date("assistant_birthdate");
             $table->decimal("assistant_salary", 12, 2);
             $table->longText("assistant_experience");
+            $table->longText("assistant_skills");
             $table->boolean("assistant_isactive");
             $table->timestamps();
         });
