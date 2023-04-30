@@ -226,13 +226,6 @@ class AssistantService
                     'gender_value'
                 );
             },
-            'mAssistantSkill' => function ($assistantSkill) {
-                $assistantSkill->select(
-                    'assistant_id',
-                    'skill_id',
-                    'skill_name'
-                );
-            },
         ])->where(
             'assistant_username',
             '=',
@@ -246,6 +239,7 @@ class AssistantService
             'assistant_birthdate',
             'assistant_salary',
             'assistant_experience',
+            'assistant_skills',
             'assistant_isactive',
         )->first();
 
