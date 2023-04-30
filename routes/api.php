@@ -24,8 +24,15 @@ Route::prefix('auth')->group(function () {
     });
 });
 
+
+
 Route::controller(AssistantController::class)->group(function () {
+    Route::get('/assistant', 'getAssistant');
+    Route::get('/assistant/{username}', 'getDetailAssistant');
     Route::post('/assistant', 'createAssistant');
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/assistant/profile', 'getAssistantByUserId');
+    });
 });
 
 Route::prefix('master')->group(function () {
@@ -36,6 +43,7 @@ Route::prefix('master')->group(function () {
         Route::get('/district', 'getDistrictByCityId');
         Route::get('/village', 'getVillageByDistrictId');
         Route::get('/postalzip', 'getPostalZipByVillageId');
+        Route::get('/gender', 'getGender');
     });
 });
 

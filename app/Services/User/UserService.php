@@ -2,6 +2,7 @@
 
 namespace App\Services\User;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Error;
 use Exception;
@@ -18,7 +19,7 @@ class UserService
         try {
             DB::beginTransaction();
             $dataUser = User::create([
-                'email' => $email,
+                'email' => strtolower($email),
                 'password' => $hashedPassword,
                 'role' => strtoupper($role)
             ]);

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Master\MasterBank\BankService;
 use App\Services\Master\MasterCity\CityService;
 use App\Services\Master\MasterDistrict\DistrictService;
+use App\Services\Master\MasterGender\GenderService;
 use App\Services\Master\MasterPostalzip\PostalzipService;
 use App\Services\Master\MasterProvince\ProvinceService;
 use App\Services\Master\MasterVillage\VillageService;
@@ -19,6 +20,7 @@ class MasterController extends Controller
     private $districtService;
     private $villageService;
     private $postalZipService;
+    private $genderService;
 
     /**
      * Class constructor.
@@ -29,7 +31,8 @@ class MasterController extends Controller
         CityService $cityService,
         DistrictService $districtService,
         VillageService $villageService,
-        PostalzipService $postalZipService
+        PostalzipService $postalZipService,
+        GenderService $genderService
     ) {
         $this->bankService = $bankService;
         $this->provinceService = $provinceService;
@@ -37,6 +40,13 @@ class MasterController extends Controller
         $this->districtService = $districtService;
         $this->villageService = $villageService;
         $this->postalZipService = $postalZipService;
+        $this->genderService = $genderService;
+    }
+
+    public function getGender()
+    {
+        $data = $this->genderService->getGender();
+        return response()->json($data, 200);
     }
 
     public function getBank()

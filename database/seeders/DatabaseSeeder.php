@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             MBankSeeder::class,
+            MGenderSeeder::class,
             MProvinceSeeder::class,
             MCitySeeder::class,
             MDistrictSeeder::class,

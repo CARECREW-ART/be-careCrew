@@ -2,6 +2,7 @@
 
 namespace App\Models\Assistant;
 
+use App\Models\Master\MCity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

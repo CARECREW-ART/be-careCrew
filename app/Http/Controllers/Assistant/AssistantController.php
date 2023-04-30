@@ -24,6 +24,8 @@ class AssistantController extends Controller
     {
         $dataAssistantValidated = $req->validated();
 
+        return strtolower($dataAssistantValidated['assistant']['assistant_username']);
+
         [$assistantId] = $this->assistantService->createAssistant($dataAssistantValidated);
 
         return response()->json(
@@ -37,8 +39,24 @@ class AssistantController extends Controller
         );
     }
 
-    public function deleteUser(Request $req)
+    public function getAssistantByUserId()
     {
-        return $this->userService->deleteUser($req['id']);
+        $userId = auth('sanctum')->user()->user_id;
+
+        $dataAssistant = $this->assistantService->getAssistantByUserId($userId);
+
+        return response()->json(['data' => $dataAssistant], 200);
+    }
+
+    public function getAssistant(Request $req)
+    {
+        $data = $this->assistantService->getAssistant($req['valueSearch'], $req['valueSort'], $req['sort'], $req['perPage']);
+        return response()->json($data, 200);
+    }
+
+    public function getDetailAssistant($username)
+    {
+        $data = $this->assistantService->getDetailAssistantById($username);
+        return response()->json(['data' => $data], 200);
     }
 }
