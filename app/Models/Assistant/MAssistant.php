@@ -2,8 +2,10 @@
 
 namespace App\Models\Assistant;
 
+use App\Models\Master\MGender;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class MAssistant extends Model
 {
@@ -25,4 +27,45 @@ class MAssistant extends Model
     ];
 
     protected $primaryKey = 'assistant_id';
+
+    public function mAssistantPicture()
+    {
+        return $this->hasOne(MAssistantPicture::class, 'assistant_id', 'assistant_id');
+    }
+
+    public function assistantGender()
+    {
+        return $this->hasOne(MGender::class, 'gender_bit', 'assistant_gender');
+    }
+
+    public function mAssistantAddress()
+    {
+        return $this->hasOne(MAssistantAddress::class, 'assistant_id', 'assistant_id');
+    }
+
+    public function mAssistantSkill()
+    {
+        return $this->hasMany(MAssistantSkill::class, 'assistant_id', 'assistant_id');
+    }
+
+    public function mAssistantCity($assistantId)
+    {
+        $data = DB::table('m_assistants')->leftJoin(
+            'm_assistant_addresses',
+            'm_assistants.assistant_id',
+            '=',
+            'm_assistant_addresses.assistant_id'
+        )->leftJoin(
+            'm_cities',
+            'm_assistant_addresses.city_id',
+            '=',
+            'm_cities.city_id'
+        )->where(
+            'm_assistant_addresses.assistant_id',
+            '=',
+            $assistantId
+        )->first();
+
+        return $data;
+    }
 }

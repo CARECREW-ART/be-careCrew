@@ -11,8 +11,8 @@ use App\Services\User\UserService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use PDOException;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AssistantService
 {
@@ -45,7 +45,7 @@ class AssistantService
                 'user_id' => $userId,
                 'assistant_fullname' => $dataAssistant['assistant_fullname'],
                 'assistant_nickname' => $dataAssistant['assistant_nickname'],
-                'assistant_username' => $dataAssistant['assistant_username'],
+                'assistant_username' => strtolower($dataAssistant['assistant_username']),
                 'assistant_telp' => $dataAssistant['assistant_telp'],
                 'assistant_gender' => $dataAssistant['assistant_gender'],
                 'assistant_birthdate' => $dataAssistant['assistant_birthdate'],
@@ -106,7 +106,153 @@ class AssistantService
         }
     }
 
-    public function getAssistantById($userId)
+    public function getAssistantByUserId($userId)
     {
+        $data = MAssistant::where('user_id', $userId)->with([
+            'assistantGender' => function ($assistantGender) {
+                $assistantGender->select(
+                    'gender_bit',
+                    'gender_value'
+                );
+            },
+            'mAssistantPicture' => function ($assistantPicture) {
+                $assistantPicture->select(
+                    'picture_id',
+                    'assistant_id',
+                    'picture_filename',
+                    'picture_path'
+                );
+            },
+            'mAssistantAddress' => function ($assistantAddress) {
+                $assistantAddress->select(
+                    'address_id',
+                    'assistant_id',
+                    'province_id',
+                    'city_id',
+                    'district_id',
+                    'village_id',
+                    'postalzip_id',
+                    'address_street',
+                    'address_other'
+                );
+            },
+        ])->select(
+            'assistant_id',
+            'user_id',
+            'assistant_fullname',
+            'assistant_nickname',
+            'assistant_username',
+            'assistant_telp',
+            'assistant_gender',
+            'assistant_birthdate',
+            'assistant_salary',
+            'assistant_experience',
+            'assistant_isactive',
+        )->first();
+
+        return $data;
+    }
+
+    public function getAssistant($valueSearch, $valueSort, $sort, $perPage)
+    {
+        $dataAssistant = MAssistant::with([
+            'mAssistantPicture' => function ($assistantPicture) {
+                $assistantPicture->select(
+                    'picture_id',
+                    'assistant_id',
+                    'picture_filename',
+                    'picture_path'
+                );
+            },
+        ])->select(
+            'assistant_id',
+            'assistant_fullname',
+            'assistant_nickname',
+            'assistant_username',
+            'assistant_salary',
+            'assistant_isactive'
+        )->where(
+            'assistant_isactive',
+            '=',
+            1
+        )->where(function ($query) use ($valueSearch) {
+            $query->where(
+                'assistant_fullname',
+                'LIKE',
+                '%' . $valueSearch . '%'
+            )->orWhere(
+                'assistant_nickname',
+                'LIKE',
+                '%' . $valueSearch . '%'
+            );
+            return $query;
+        });
+
+        if (isset($valueSort) && isset($valueSort)) {
+            $dataAssistant = $dataAssistant->orderBy($valueSort, $sort);
+        }
+
+        if (isset($perPage)) {
+            $dataAssistant = $dataAssistant->latest()->paginate($perPage);
+        }
+
+        if ($perPage !== null) {
+            $result = $dataAssistant->appends(['sort' => $sort, 'valueSearch' => $valueSearch, 'valueSort' => $valueSort, 'perPage' => $perPage]);
+            return $result;
+        }
+
+        $result = $dataAssistant->latest()->paginate(10)->appends(['sort' => $sort, 'valueSearch' => $valueSearch, 'valueSort' => $valueSort, 'perPage' => $perPage]);
+        return $result;
+    }
+
+    public function getDetailAssistantById($username)
+    {
+        // return $username;
+
+        $dataAssistant = MAssistant::with([
+            'mAssistantPicture' => function ($assistantPicture) {
+                $assistantPicture->select(
+                    'picture_id',
+                    'assistant_id',
+                    'picture_filename',
+                    'picture_path'
+                );
+            },
+            'assistantGender' => function ($assistantGender) {
+                $assistantGender->select(
+                    'gender_bit',
+                    'gender_value'
+                );
+            },
+            'mAssistantSkill' => function ($assistantSkill) {
+                $assistantSkill->select(
+                    'assistant_id',
+                    'skill_id',
+                    'skill_name'
+                );
+            },
+        ])->where(
+            'assistant_username',
+            '=',
+            $username
+        )->select(
+            'assistant_id',
+            'assistant_fullname',
+            'assistant_nickname',
+            'assistant_username',
+            'assistant_gender',
+            'assistant_birthdate',
+            'assistant_salary',
+            'assistant_experience',
+            'assistant_isactive',
+        )->first();
+
+        $dataCityAssistant = $dataAssistant->mAssistantCity($dataAssistant->assistant_id);
+
+        $dataAssistant['city_name'] = $dataCityAssistant->city_name;
+
+        return $dataAssistant;
+
+        return $dataCityAssistant;
     }
 }

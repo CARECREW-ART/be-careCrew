@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Authentication\AuthenticationLoginRequest as AuthLogReq;
 use App\Services\Authentication\AuthenticationService;
 use App\Services\User\UserService;
-use Illuminate\Http\Request;
 
 class AuthenticationController extends Controller
 {
