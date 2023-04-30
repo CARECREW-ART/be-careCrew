@@ -68,4 +68,9 @@ class MAssistant extends Model
 
         return $data;
     }
+
+    public function mAssistantAccbank()
+    {
+        return $this->hasOne(MAssistantAccbank::class, 'assistant_id', 'assistant_id');
+    }
 }

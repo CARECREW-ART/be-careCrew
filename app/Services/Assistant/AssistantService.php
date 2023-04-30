@@ -69,7 +69,9 @@ class AssistantService
 
             MAssistantAccbank::create([
                 'assistant_id' => $assistantId,
-                'bank_id' => $dataAssistantBank['bank_id']
+                'bank_id' => $dataAssistantBank['bank_id'],
+                'accbank_name' => strtoupper($dataAssistantBank['accbank_name']),
+                'accbank_value' => $dataAssistantBank['accbank_value']
             ]);
 
             foreach ($dataAssistantSkill as $dASkill) {
@@ -102,13 +104,13 @@ class AssistantService
                 File::delete($path);
             }
 
-            throw new Exception($e);
+            throw new HttpException(500, $e->getMessage());
         }
     }
 
     public function getAssistantByUserId($userId)
     {
-        $data = MAssistant::where('user_id', $userId)->with([
+        $dataAssistant = MAssistant::where('user_id', $userId)->with([
             'assistantGender' => function ($assistantGender) {
                 $assistantGender->select(
                     'gender_bit',
@@ -136,6 +138,14 @@ class AssistantService
                     'address_other'
                 );
             },
+            'mAssistantAccbank' => function ($assistantBank) {
+                $assistantBank->select(
+                    'assistant_id',
+                    'bank_id',
+                    'accbank_name',
+                    'accbank_value'
+                );
+            },
         ])->select(
             'assistant_id',
             'user_id',
@@ -150,7 +160,7 @@ class AssistantService
             'assistant_isactive',
         )->first();
 
-        return $data;
+        return $dataAssistant;
     }
 
     public function getAssistant($valueSearch, $valueSort, $sort, $perPage)

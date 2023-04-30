@@ -31,7 +31,7 @@ Route::controller(AssistantController::class)->group(function () {
     Route::get('/assistant/{username}', 'getDetailAssistant');
     Route::post('/assistant', 'createAssistant');
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/assistant/profile', 'getAssistantByUserId');
+        Route::get('assistant/profile/settings', 'getAssistantByUserId');
     });
 });
 

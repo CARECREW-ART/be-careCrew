@@ -7,6 +7,7 @@ use App\Http\Requests\Assistant\AssistantPostRequest;
 use App\Services\Assistant\AssistantService;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AssistantController extends Controller
 {
@@ -24,16 +25,11 @@ class AssistantController extends Controller
     {
         $dataAssistantValidated = $req->validated();
 
-        return strtolower($dataAssistantValidated['assistant']['assistant_username']);
-
         [$assistantId] = $this->assistantService->createAssistant($dataAssistantValidated);
 
         return response()->json(
             [
                 'message' => 'Assistant Berhasil Dibuat',
-                "data" => [
-                    'assistantId' => $assistantId
-                ]
             ],
             201
         );
