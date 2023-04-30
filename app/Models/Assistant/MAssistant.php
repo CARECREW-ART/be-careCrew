@@ -16,13 +16,12 @@ class MAssistant extends Model
         'assistant_fullname',
         'assistant_nickname',
         'assistant_username',
-        'assistant_email',
         'assistant_telp',
         'assistant_gender',
         'assistant_birthdate',
         'assistant_salary',
         'assistant_experience',
-        'assistant_password',
+        'assistant_skills',
         'assistant_isactive'
     ];
 

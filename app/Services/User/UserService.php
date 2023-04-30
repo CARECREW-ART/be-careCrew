@@ -53,6 +53,23 @@ class UserService
         }
     }
 
+    public function verifyUserValidPassword($userId, $password)
+    {
+        try {
+            $user = User::where('user_id', $userId)->first();
+
+            $resultPassword = Hash::check($password, $user->password);
+
+            if (!$resultPassword) {
+                return [false, "Password yang Anda Berikan Salah"];
+            }
+
+            return [$user->user_id, 'success'];
+        } catch (Exception $e) {
+            throw new HttpException(500, $e->getMessage());
+        }
+    }
+
     public function deleteUser($userId)
     {
         try {

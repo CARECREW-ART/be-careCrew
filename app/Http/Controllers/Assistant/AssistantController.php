@@ -44,6 +44,18 @@ class AssistantController extends Controller
         return response()->json(['data' => $dataAssistant], 200);
     }
 
+    public function putAssistantByUserId(Request $req)
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        [$user, $message] = $this->userService->verifyUserValidPassword($userId, $req['password']);
+
+        if (!$user) {
+            return response()->json(['message' => $message], 400);
+        }
+        return [$user, $message];
+    }
+
     public function getAssistant(Request $req)
     {
         $data = $this->assistantService->getAssistant($req['valueSearch'], $req['valueSort'], $req['sort'], $req['perPage']);
