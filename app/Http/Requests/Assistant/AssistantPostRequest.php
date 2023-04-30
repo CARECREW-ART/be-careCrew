@@ -48,6 +48,8 @@ class AssistantPostRequest extends FormRequest
             'assistant_address.address_other' => 'nullable',
             'assistant_skill.*.skill_name' => 'required|string',
             'assistant_accbank.bank_id' => 'required|exists:m_banks,bank_id',
+            'assistant_accbank.accbank_name' => 'required|string',
+            'assistant_accbank.accbank_value' => 'required|integer',
             'assistant_picture' => 'nullable|mimes:jpeg,jpg,png|min:30|max:1024'
         ];
     }
@@ -74,7 +76,9 @@ class AssistantPostRequest extends FormRequest
             'assistant_address.address_other' => 'Alamat Lainnya',
             'assistant_skill.*.skill_name' => 'Skill',
             'assistant_picture' => 'Foto Profil',
-            'assistant_accbank.bank_id' => 'Bank'
+            'assistant_accbank.bank_id' => 'Bank',
+            'assistant_accbank.accbank_name' => 'Nama Rekening',
+            'assistant_accbank.accbank_value' => 'No. Rekening',
         ];
     }
 }

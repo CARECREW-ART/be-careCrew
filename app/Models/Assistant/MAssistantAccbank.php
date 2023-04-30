@@ -11,6 +11,8 @@ class MAssistantAccbank extends Model
 
     protected $fillable = [
         'assistant_id',
-        'bank_id'
+        'bank_id',
+        'accbank_name',
+        'accbank_value'
     ];
 }

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id("accbank_id");
             $table->foreignIdFor(MAssistant::class, "assistant_id")->constrained('m_assistants', 'assistant_id');
             $table->foreignIdFor(MBank::class, "bank_id")->constrained('m_banks', 'bank_id');
+            $table->string("accbank_name");
+            $table->string("accbank_value");
             $table->timestamps();
         });
     }
