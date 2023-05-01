@@ -50,10 +50,10 @@ class AssistantController extends Controller
 
         [$data, $message] = $this->userService->verifyUserValidPassword($userId, $req['password']);
 
-        // if (!$data) {
-        //     return response()->json(['message' => $message], 400);
-        // }
-        // return [$data, $message];
+        if (!$data) {
+            return response()->json(['message' => $message], 400);
+        }
+        return [$data, $message];
     }
 
     public function getAssistant(Request $req)
