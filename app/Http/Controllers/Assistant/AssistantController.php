@@ -48,12 +48,12 @@ class AssistantController extends Controller
     {
         $userId = auth('sanctum')->user()->user_id;
 
-        [$user, $message] = $this->userService->verifyUserValidPassword($userId, $req['password']);
+        [$data, $message] = $this->userService->verifyUserValidPassword($userId, $req['password']);
 
-        if (!$user) {
-            return response()->json(['message' => $message], 400);
-        }
-        return [$user, $message];
+        // if (!$data) {
+        //     return response()->json(['message' => $message], 400);
+        // }
+        // return [$data, $message];
     }
 
     public function getAssistant(Request $req)
