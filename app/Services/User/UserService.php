@@ -29,10 +29,7 @@ class UserService
         } catch (Exception $e) {
             DB::rollBack();
 
-            if (gettype($e->getCode()) == "string") {
-                throw new Exception($e->getMessage(), 500);
-            }
-            throw new Exception($e->getMessage(), $e->getCode());
+            throw new Exception($e->getMessage(), 500);
         }
     }
 
@@ -53,10 +50,7 @@ class UserService
 
             return [$user, 'success'];
         } catch (Exception $e) {
-            if (gettype($e->getCode()) == "string") {
-                throw new Exception($e->getMessage(), 500);
-            }
-            throw new Exception($e->getMessage(), $e->getCode());
+            throw new Exception($e->getMessage(), 500);
         }
     }
 
@@ -68,15 +62,12 @@ class UserService
             $resultPassword = Hash::check($password, $user->password);
 
             if (!$resultPassword) {
-                throw new Exception("Password yang Anda Masukkan Salah", 400);
+                return [false, "Password yang Anda Masukkan Salah"];
             }
 
             return [$user->user_id, 'success'];
         } catch (Exception $e) {
-            if (gettype($e->getCode()) == "string") {
-                throw new Exception($e->getMessage(), 500);
-            }
-            throw new Exception($e->getMessage(), $e->getCode());
+            throw new Exception($e->getMessage(), 500);
         }
     }
 
