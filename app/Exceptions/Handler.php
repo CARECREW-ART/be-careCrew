@@ -45,4 +45,13 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $e)
+    {
+        if ($e->getCode() != 500) {
+            return response()->json(['message' => $e->getMessage()], $e->getCode());
+        }
+
+        return parent::render($request, $e);
+    }
 }

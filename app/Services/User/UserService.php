@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Throwable;
 
 class UserService
 {
@@ -28,7 +29,10 @@ class UserService
         } catch (Exception $e) {
             DB::rollBack();
 
-            throw new HttpException(500, $e->getMessage());
+            if (gettype($e->getCode()) == "string") {
+                throw new Exception($e->getMessage(), 500);
+            }
+            throw new Exception($e->getMessage(), $e->getCode());
         }
     }
 
@@ -49,7 +53,10 @@ class UserService
 
             return [$user, 'success'];
         } catch (Exception $e) {
-            throw new HttpException(500, $e->getMessage());
+            if (gettype($e->getCode()) == "string") {
+                throw new Exception($e->getMessage(), 500);
+            }
+            throw new Exception($e->getMessage(), $e->getCode());
         }
     }
 
@@ -61,28 +68,31 @@ class UserService
             $resultPassword = Hash::check($password, $user->password);
 
             if (!$resultPassword) {
-                return [false, "Password yang Anda Berikan Salah"];
+                throw new Exception("Password yang Anda Masukkan Salah", 400);
             }
 
             return [$user->user_id, 'success'];
         } catch (Exception $e) {
-            throw new HttpException(500, $e->getMessage());
+            if (gettype($e->getCode()) == "string") {
+                throw new Exception($e->getMessage(), 500);
+            }
+            throw new Exception($e->getMessage(), $e->getCode());
         }
     }
 
-    public function deleteUser($userId)
-    {
-        try {
-            DB::beginTransaction();
+    // public function deleteUser($userId)
+    // {
+    //     try {
+    //         DB::beginTransaction();
 
-            $dataUser = User::findOrFail($userId);
-            $dataUser->delete();
+    //         $dataUser = User::findOrFail($userId);
+    //         $dataUser->delete();
 
-            DB::commit();
-        } catch (ModelNotFoundException $e) {
-            DB::rollBack();
+    //         DB::commit();
+    //     } catch (ModelNotFoundException $e) {
+    //         DB::rollBack();
 
-            throw new HttpException(404, 'User Id ' . $userId . ' not Found');
-        }
-    }
+    //         throw new HttpException(404, 'User Id ' . $userId . ' not Found');
+    //     }
+    // }
 }
