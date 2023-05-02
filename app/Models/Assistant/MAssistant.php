@@ -3,6 +3,7 @@
 namespace App\Models\Assistant;
 
 use App\Models\Master\MGender;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -71,5 +72,10 @@ class MAssistant extends Model
     public function mAssistantAccbank()
     {
         return $this->hasOne(MAssistantAccbank::class, 'assistant_id', 'assistant_id');
+    }
+
+    public function emailUser()
+    {
+        return $this->hasOne(User::class, 'user_id', 'user_id');
     }
 }

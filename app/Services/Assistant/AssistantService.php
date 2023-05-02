@@ -140,6 +140,12 @@ class AssistantService
                     'accbank_value'
                 );
             },
+            'emailUser' => function ($email) {
+                $email->select(
+                    'user_id',
+                    'email'
+                );
+            },
         ])->select(
             'assistant_id',
             'user_id',
@@ -252,7 +258,48 @@ class AssistantService
         return $dataCityAssistant;
     }
 
-    public function putDetailAssistant()
+    public function putDetailAssistant($data, $userId)
     {
+        try {
+            DB::beginTransaction();
+            $dataAssistant = MAssistant::where('user_id', $userId);
+            $dataAssistant->update($data);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function putAssistantAddresByUserId($data, $userId)
+    {
+        try {
+            DB::beginTransaction();
+            $dataAssistantId = $this->getAssistantByUserId($userId);
+
+            $dataAssistantAddrs = MAssistantAddress::where('assistant_id', $dataAssistantId->assistant_id);
+
+            $dataAssistantAddrs->update($data);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function putAssistantBankByUserId($data, $userId)
+    {
+        try {
+            DB::beginTransaction();
+            $dataAssistantId = $this->getAssistantByUserId($userId);
+
+            $dataAssistantBank = MAssistantAccbank::where('assistant_id', $dataAssistantId->assistant_id);
+
+            $dataAssistantBank->update($data);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
     }
 }
