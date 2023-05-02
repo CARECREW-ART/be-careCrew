@@ -33,6 +33,8 @@ Route::controller(AssistantController::class)->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('assistant/profile/settings', 'getAssistantByUserId');
         Route::put('assistant/profile/settings', 'putAssistantByUserId');
+        Route::put('assistant/profile/settings/address', 'putAssistantAddresByUserId');
+        Route::put('assistant/profile/settings/bank', 'putAssistantBankByUserId');
     });
 });
 

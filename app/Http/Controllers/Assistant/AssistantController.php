@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Assistant;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Assistant\AssistantAddressPutRequest as AssistantAddrsPutReq;
+use App\Http\Requests\Assistant\AssistantBankPutRequest;
 use App\Http\Requests\Assistant\AssistantPostRequest;
+use App\Http\Requests\Assistant\AssistantPutRequest;
 use App\Services\Assistant\AssistantService;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
@@ -44,18 +47,53 @@ class AssistantController extends Controller
         return response()->json(['data' => $dataAssistant], 200);
     }
 
-    public function putAssistantByUserId(Request $req)
+    public function putAssistantByUserId(AssistantPutRequest $req)
     {
         $userId = auth('sanctum')->user()->user_id;
 
-        return $req;
+        $dataAssistant = $req->validated('assistant');
 
         [$data, $message] = $this->userService->verifyUserValidPassword($userId, $req['password']);
 
         if (!$data) {
             return response()->json(['message' => $message], 400);
         }
-        return [$data, $message];
+        $this->assistantService->putDetailAssistant($dataAssistant, $data);
+        return response()->json(['message' => 'data berhasil diupdate'], 200);
+    }
+
+    public function putAssistantAddresByUserId(AssistantAddrsPutReq $req)
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        $dataAssistantAddress = $req->validated('assistant_address');
+
+        [$data, $message] = $this->userService->verifyUserValidPassword($userId, $req['password']);
+
+        if (!$data) {
+            return response()->json(['message' => $message], 400);
+        }
+
+        $this->assistantService->putAssistantAddresByUserId($dataAssistantAddress, $userId);
+
+        return response()->json(['message' => 'Data Alamat Berhasil diupdate'], 200);
+    }
+
+    public function putAssistantBankByUserId(AssistantBankPutRequest $req)
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        $dataBank = $req->validated('assistant_accbank');
+
+        [$data, $message] = $this->userService->verifyUserValidPassword($userId, $req['password']);
+
+        if (!$data) {
+            return response()->json(['message' => $message], 400);
+        }
+
+        $data = $this->assistantService->putAssistantBankByUserId($dataBank, $userId);
+
+        return response()->json(['message' => 'Data Bank Berhasil diupdate'], 200);
     }
 
     public function getAssistant(Request $req)
