@@ -2,6 +2,7 @@
 
 namespace App\Services\Assistant;
 
+use App\Models\Assistant\AssistantFavorite;
 use App\Models\Assistant\MAssistant;
 use App\Models\Assistant\MAssistantAccbank;
 use App\Models\Assistant\MAssistantAddress;
@@ -256,6 +257,58 @@ class AssistantService
         return $dataAssistant;
 
         return $dataCityAssistant;
+    }
+
+    public function postAsisstantFavoriteByUserId($username, $userId)
+    {
+        try {
+            DB::beginTransaction();
+            $assistantId = $this->getDetailAssistantById($username);
+
+            $dataAssistantId = $this->getAssistantFavoriteByUserId($userId);
+
+            foreach ($dataAssistantId as $aId) {
+                if ($aId['assistant_id'] == $assistantId->assistant_id) {
+                    return [false, "Data Assistant Favorite Sudah Ada"];
+                }
+            }
+
+            AssistantFavorite::create([
+                "user_id" => $userId,
+                "assistant_id" => $assistantId->assistant_id
+            ]);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function getAssistantFavoriteByUserId($userId)
+    {
+        $dataAssistant = AssistantFavorite::where('user_id', $userId)->with(
+            [
+                "mAssistant" => function ($mAssistant) {
+                    $mAssistant->select(
+                        'assistant_id',
+                        'assistant_fullname',
+                        'assistant_nickname',
+                        'assistant_username',
+                        'assistant_salary',
+                        'assistant_isactive'
+                    );
+                }
+            ],
+        )->select('id', 'assistant_id', 'user_id')->get();
+
+        foreach ($dataAssistant as $aId) {
+            if ($aId['assistant_id'] == 12) {
+                return true;
+            }
+        }
+
+        return $dataAssistant;
     }
 
     public function putDetailAssistant($data, $userId)

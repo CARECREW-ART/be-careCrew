@@ -31,10 +31,12 @@ Route::controller(AssistantController::class)->group(function () {
     Route::get('/assistant/{username}', 'getDetailAssistant');
     Route::post('/assistant', 'createAssistant');
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('assistant/profile/settings', 'getAssistantByUserId');
-        Route::put('assistant/profile/settings', 'putAssistantByUserId');
-        Route::put('assistant/profile/settings/address', 'putAssistantAddresByUserId');
-        Route::put('assistant/profile/settings/bank', 'putAssistantBankByUserId');
+        Route::get('/assistant/profile/settings', 'getAssistantByUserId');
+        Route::put('/assistant/profile/settings', 'putAssistantByUserId');
+        Route::put('/assistant/profile/settings/address', 'putAssistantAddresByUserId');
+        Route::put('/assistant/profile/settings/bank', 'putAssistantBankByUserId');
+        Route::post('/assistant/c/favorite', 'postAssistantFavoriteByUserId');
+        Route::get('/assistant/c/favorite', 'getAssistantFavoriteByUserId');
     });
 });
 

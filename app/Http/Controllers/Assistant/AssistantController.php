@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Assistant;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Assistant\AssistantAddressPutRequest as AssistantAddrsPutReq;
 use App\Http\Requests\Assistant\AssistantBankPutRequest;
+use App\Http\Requests\Assistant\AssistantFavoritePostRequest as AssistantFavPostReq;
 use App\Http\Requests\Assistant\AssistantPostRequest;
 use App\Http\Requests\Assistant\AssistantPutRequest;
 use App\Services\Assistant\AssistantService;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AssistantController extends Controller
 {
@@ -94,6 +96,30 @@ class AssistantController extends Controller
         $data = $this->assistantService->putAssistantBankByUserId($dataBank, $userId);
 
         return response()->json(['message' => 'Data Bank Berhasil diupdate'], 200);
+    }
+
+    public function postAssistantFavoriteByUserId(AssistantFavPostReq $req)
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        $usernameValidated = $req->validated('assistant_username');
+
+        [$data, $message] = $this->assistantService->postAsisstantFavoriteByUserId($usernameValidated, $userId);
+
+        if (!$data) {
+            return response()->json(['message' => $message], 200);
+        }
+
+        return response()->json(['message' => "Data Assistant Berhasil ditambahkan ke Favorite"], 201);
+    }
+
+    public function getAssistantFavoriteByUserId()
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        $data = $this->assistantService->getAssistantFavoriteByUserId($userId);
+
+        return response()->json(['data' => $data], 200);
     }
 
     public function getAssistant(Request $req)
