@@ -140,6 +140,12 @@ class AssistantService
                     'accbank_value'
                 );
             },
+            'emailUser' => function ($email) {
+                $email->select(
+                    'user_id',
+                    'email'
+                );
+            },
         ])->select(
             'assistant_id',
             'user_id',
