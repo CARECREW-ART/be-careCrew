@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Assistant\AssistantController;
 use App\Http\Controllers\Authentication\AuthenticationController;
+use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Master\MasterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,12 @@ Route::prefix('auth')->group(function () {
         Route::post('/logout', 'logout')->middleware('auth:sanctum');
     });
 });
+
+//customer contoller
+Route::post('/customer', [CustomerController::class, 'createCustomer']);
+Route::get('/customer', [CustomerController::class, 'getCustomer']);
+    // Route::
+
 
 
 
