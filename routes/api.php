@@ -25,7 +25,11 @@ Route::prefix('auth')->group(function () {
     });
 });
 
-Route::post('/customer', [CustomerController::class, 'postCustomer']);
+//customer contoller
+Route::post('/customer', [CustomerController::class, 'createCustomer']);
+Route::get('/customer', [CustomerController::class, 'getCustomer']);
+    // Route::
+
 
 
 

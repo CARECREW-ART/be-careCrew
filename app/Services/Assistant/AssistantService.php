@@ -79,7 +79,7 @@ class AssistantService
             $photoNameExt = $profilePhoto->getClientOriginalName();
             $extention = $profilePhoto->extension();
             $file_name = (Str::random(16) . '.' . $extention);
-            $profilePhoto->move('./storage/photoAssistant', $file_name);
+            $path = $profilePhoto->move('./storage/photoAssistant', $file_name);
             $url = Storage::url("/photoAssistant/" . $file_name);
 
             MAssistantPicture::create([

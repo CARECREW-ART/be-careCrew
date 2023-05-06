@@ -13,7 +13,7 @@ class MCustormerPicture extends Model
         'customer_id',
         'picture_filename',
         'picture_imagename',
-        'picture_type',
-        'picture_path',
+        'picture_mime',
+        'picture_path' 
     ];
 }
