@@ -255,8 +255,6 @@ class AssistantService
         $dataAssistant['city_name'] = $dataCityAssistant->city_name;
 
         return $dataAssistant;
-
-        return $dataCityAssistant;
     }
 
     public function postAsisstantFavoriteByUserId($username, $userId)

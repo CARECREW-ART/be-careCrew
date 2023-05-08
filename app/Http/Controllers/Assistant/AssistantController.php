@@ -11,8 +11,6 @@ use App\Http\Requests\Assistant\AssistantPutRequest;
 use App\Services\Assistant\AssistantService;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class AssistantController extends Controller
 {
