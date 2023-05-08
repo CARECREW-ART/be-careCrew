@@ -19,6 +19,7 @@ return new class extends Migration
             $table->char("customer_nickname", 50);
             $table->char("customer_username", 20)->unique();
             $table->char("customer_telp", 16)->unique();
+            $table->date("customer_birthdate");
             $table->boolean("customer_gender");
             $table->timestamps();
         });

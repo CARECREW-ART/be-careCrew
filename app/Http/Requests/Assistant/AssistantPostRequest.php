@@ -28,7 +28,7 @@ class AssistantPostRequest extends FormRequest
             'assistant.assistant_nickname' => 'required|string|max:50',
             'assistant.assistant_username' => 'required|min:6|max:20|alpha_num|unique:m_assistants,assistant_username',
             'assistant.assistant_telp' => 'required|max:16|unique:m_assistants,assistant_telp',
-            'assistant.assistant_gender' => 'required|numeric',
+            'assistant.assistant_gender' => 'required|numeric|exists:m_genders,gender_bit',
             'assistant.assistant_birthdate' => [
                 'required',
                 'date',
