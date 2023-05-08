@@ -25,13 +25,12 @@ Route::prefix('auth')->group(function () {
     });
 });
 
-//customer contoller
-Route::post('/customer', [CustomerController::class, 'createCustomer']);
-Route::get('/customer', [CustomerController::class, 'getCustomer']);
-    // Route::
-
-
-
+Route::controller(CustomerController::class)->group(function () {
+    Route::post('/customer', 'createCustomer');
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/customer', 'getCustomerByUserId');
+    });
+});
 
 Route::controller(AssistantController::class)->group(function () {
     Route::get('/assistant', 'getAssistant');
