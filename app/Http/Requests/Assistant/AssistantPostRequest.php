@@ -50,7 +50,7 @@ class AssistantPostRequest extends FormRequest
             'assistant_accbank.bank_id' => 'required|exists:m_banks,bank_id',
             'assistant_accbank.accbank_name' => 'required|string',
             'assistant_accbank.accbank_value' => 'required|integer',
-            'assistant_picture' => 'nullable|mimes:jpeg,jpg,png|min:30|max:1024'
+            'assistant_picture' => 'nullable|mimes:jpeg,jpg,png|min:30|max:10240'
         ];
     }
 
