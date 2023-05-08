@@ -38,7 +38,6 @@ class AssistantPostRequest extends FormRequest
             ],
             'assistant.assistant_salary' => 'required|numeric',
             'assistant.assistant_experience' => 'required|min:50',
-            'assistant.assistant_isactive' => 'required|boolean',
             'assistant_address.province_id' => 'exists:m_provinces,province_id|nullable',
             'assistant_address.city_id' => 'exists:m_cities,city_id|nullable',
             'assistant_address.district_id' => 'exists:m_districts,district_id|nullable',
