@@ -2,6 +2,7 @@
 
 namespace App\Services\Assistant;
 
+use App\Exceptions\NotFoundException;
 use App\Models\Assistant\AssistantFavorite;
 use App\Models\Assistant\MAssistant;
 use App\Models\Assistant\MAssistantAccbank;
@@ -249,6 +250,10 @@ class AssistantService
             'assistant_skills',
             'assistant_isactive',
         )->first();
+
+        if ($dataAssistant == null) {
+            throw new NotFoundException("data Assistant tidak ada");
+        }
 
         $dataCityAssistant = $dataAssistant->mAssistantCity($dataAssistant->assistant_id);
 
