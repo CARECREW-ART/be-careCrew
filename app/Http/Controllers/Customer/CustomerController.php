@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Services\User\UserService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\CustomerPostRequest;
+use App\Http\Requests\Customer\CustomerPutRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -150,5 +151,10 @@ class CustomerController extends Controller
         return $dataCustomer;
 
         return $userId;
+    }
+
+    public function putDetailCustomer(CustomerPutRequest $req)
+    {
+        return $req;
     }
 }
