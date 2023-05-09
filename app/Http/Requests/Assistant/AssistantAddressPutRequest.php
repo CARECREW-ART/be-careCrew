@@ -29,6 +29,7 @@ class AssistantAddressPutRequest extends FormRequest
             'assistant_address.postalzip_id' => 'exists:m_postalzips,postalzip_id|nullable',
             'assistant_address.address_street' => 'required|min:20',
             'assistant_address.address_other' => 'nullable',
+            "password" => "required",
         ];
     }
 
@@ -42,6 +43,7 @@ class AssistantAddressPutRequest extends FormRequest
             'assistant_address.postalzip_id' => 'Kode Pos',
             'assistant_address.address_street' => 'Alamat Lengkap',
             'assistant_address.address_other' => 'Alamat Lainnya',
+            'password' => 'Kata Sandi'
         ];
     }
 }

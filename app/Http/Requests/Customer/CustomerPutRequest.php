@@ -11,7 +11,7 @@ class CustomerPutRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -33,9 +33,6 @@ class CustomerPutRequest extends FormRequest
                 'before_or_equal:' . date("Y-m-d", strtotime("-18 year")),
                 'after_or_equal:' . date("Y-m-d", strtotime("-55 year"))
             ],
-            "customer.customer_salary" => "required|numeric",
-            "customer.customer_experience" => "required|min:50",
-            "customer.customer_skills" => "required|string",
             "password" => "required",
         ];
     }
@@ -48,6 +45,7 @@ class CustomerPutRequest extends FormRequest
             'customer.customer_telp' => 'Nomor Telepon',
             'customer.customer_gender' => 'Jenis Kelamin',
             'customer.customer_birthdate' => 'Tanggal Lahir',
+            'password' => 'Kata Sandi'
         ];
     }
 }

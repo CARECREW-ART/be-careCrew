@@ -30,6 +30,7 @@ Route::controller(CustomerController::class)->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/customer/profile/settings', 'getCustomerByUserId');
         Route::put('/customer/profile/settings', 'putDetailCustomer')->middleware('CustomerRole');
+        Route::put('/customer/profile/settings/address', 'putCustomerByUserId')->middleware('CustomerRole');
     });
 });
 
