@@ -52,7 +52,7 @@ class AssistantService
                 'assistant_birthdate' => $dataAssistant['assistant_birthdate'],
                 'assistant_salary' => $dataAssistant['assistant_salary'],
                 'assistant_experience' => $dataAssistant['assistant_experience'],
-                'assistant_isactive' => $dataAssistant['assistant_isactive'],
+                'assistant_isactive' => 1,
                 'assistant_skills' => $dataAssistant['assistant_skills']
             ]);
 
