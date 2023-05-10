@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Assistant\AssistantAddressPutRequest as AssistantAddrsPutReq;
 use App\Http\Requests\Assistant\AssistantBankPutRequest;
 use App\Http\Requests\Assistant\AssistantFavoritePostRequest as AssistantFavPostReq;
+use App\Http\Requests\Assistant\AssistantPicturePutRequest;
 use App\Http\Requests\Assistant\AssistantPostRequest;
 use App\Http\Requests\Assistant\AssistantPutRequest;
 use App\Services\Assistant\AssistantService;
@@ -94,6 +95,23 @@ class AssistantController extends Controller
         $data = $this->assistantService->putAssistantBankByUserId($dataBank, $userId);
 
         return response()->json(['message' => 'Data Bank Berhasil diupdate'], 200);
+    }
+
+    public function putAssistantPictureByUserId(AssistantPicturePutRequest $req)
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        $dataValidated = $req->validated();
+
+        [$data, $message] = $this->userService->verifyUserValidPassword($userId, $dataValidated['password']);
+
+        if (!$data) {
+            return response()->json(['message' => $message], 400);
+        }
+
+        $dataAssistant = $this->assistantService->putAssistantPicture(null, $userId);
+
+        return $dataAssistant;
     }
 
     public function postAssistantFavoriteByUserId(AssistantFavPostReq $req)

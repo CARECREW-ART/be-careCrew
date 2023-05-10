@@ -158,6 +158,7 @@ class AssistantService
             'assistant_gender',
             'assistant_birthdate',
             'assistant_salary',
+            'assistant_skills',
             'assistant_experience',
             'assistant_isactive',
         )->first();
@@ -325,6 +326,55 @@ class AssistantService
             DB::rollBack();
             throw new Exception($e->getMessage());
         }
+    }
+
+    public function putAssistantPicture($data, $userId)
+    {
+        try {
+            DB::beginTransaction();
+
+            $dataPhoto = $data;
+            $dataAssistant = $this->getAssistantByUserId($userId);
+
+            if ($dataAssistant == null) {
+                throw new NotFoundException('data assistant tidak ada');
+            }
+
+            $dataAssistantPicture = $dataAssistant->mAssistantPicture;
+
+            $pathOldPhoto = './storage/photoAssistant/' . $dataAssistantPicture->picture_filename;
+
+            if (isset($pathOldPhoto)) {
+                File::delete($pathOldPhoto);
+            }
+
+            //Link Photo to Storage
+            $photoNameExt = $dataPhoto->getClientOriginalName();
+            $extention = $dataPhoto->extension();
+            $file_name = (Str::random(16) . '.' . $extention);
+            $path = $dataPhoto->move('./storage/photoAssistant', $file_name);
+            $url = Storage::url("/photoAssistant/" . $file_name);
+
+            MAssistantPicture::create([
+                'assistant_id' => $dataAssistant->assistant_id,
+                'picture_filename' => $file_name,
+                'picture_imagename' => $photoNameExt,
+                'picture_mime' => $extention,
+                'picture_path' => $url
+            ]);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            if (isset($path)) {
+                File::delete($path);
+            }
+
+            throw new Exception($e->getMessage());
+        }
+
+        return $dataPhoto;
     }
 
     public function putAssistantAddresByUserId($data, $userId)

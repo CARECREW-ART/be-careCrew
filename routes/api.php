@@ -43,6 +43,7 @@ Route::controller(AssistantController::class)->group(function () {
         Route::put('/assistant/profile/settings', 'putAssistantByUserId')->middleware('AssistantRole');
         Route::put('/assistant/profile/settings/address', 'putAssistantAddresByUserId')->middleware('AssistantRole');
         Route::put('/assistant/profile/settings/bank', 'putAssistantBankByUserId')->middleware('AssistantRole');
+        Route::post('/assistant/profile/settings/profilePicture', 'putAssistantPictureByUserId')->middleware('AssistantRole');
         Route::post('/assistant/c/favorite', 'postAssistantFavoriteByUserId')->middleware('CustomerRole');
         Route::get('/assistant/c/favorite', 'getAssistantFavoriteByUserId')->middleware('CustomerRole');
     });
