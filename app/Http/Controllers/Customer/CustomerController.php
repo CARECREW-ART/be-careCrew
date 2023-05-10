@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Customer;
 
+use App\Exceptions\NotFoundException;
 use App\Services\User\UserService;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Customer\CustomerAddressPutRequest;
 use App\Http\Requests\Customer\CustomerPostRequest;
 use App\Http\Requests\Customer\CustomerPutRequest;
 use Illuminate\Http\Request;
@@ -148,13 +150,68 @@ class CustomerController extends Controller
             'customer_birthdate',
         )->first();
 
-        return $dataCustomer;
+        if ($dataCustomer == null) {
+            throw new NotFoundException('Data Customer Tidak Ada');
+        }
 
-        return $userId;
+        return response()->json(['data' => $dataCustomer], 200);
     }
 
     public function putDetailCustomer(CustomerPutRequest $req)
     {
-        return $req;
+        $userId = auth('sanctum')->user()->user_id;
+
+        $dataValid = $req->validated();
+
+        [$data, $message] = $this->userService->verifyUserValidPassword($userId, $dataValid['password']);
+
+        if (!$data) {
+            return response()->json(['message' => $message], 400);
+        }
+
+        try {
+            DB::beginTransaction();
+            $dataCustomer = MCustomer::where('user_id', $data);
+            $dataCustomer->update($dataValid['customer']);
+            DB::commit();
+
+            return response()->json(['message' => 'data customer berhasil diupdate'], 201);
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function putCustomerByUserId(CustomerAddressPutRequest $req)
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        $dataValid = $req->validated();
+
+        [$data, $message] = $this->userService->verifyUserValidPassword($userId, $dataValid['password']);
+
+        if (!$data) {
+            return response()->json(['message' => $message], 400);
+        }
+
+        try {
+            DB::beginTransaction();
+            $customerId = MCustomer::where('user_id', $userId)->first();
+
+            if ($customerId == null) {
+                return response()->json(['message' => 'data customer tidak ada'], 404);
+            }
+
+            $dataAssistantAddrs = MCustomerAddress::where('customer_id', $customerId->customer_id);
+
+            $dataAssistantAddrs->update($dataValid['customer_address']);
+
+            DB::commit();
+
+            return response()->json(['message' => 'data customer berhasil diupdate']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
     }
 }
