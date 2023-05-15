@@ -78,8 +78,8 @@ class AssistantService
 
             //Link Photo to Storage
             $photoNameExt = $profilePhoto->getClientOriginalName();
-            $extention = $profilePhoto->extension();
-            $file_name = (Str::random(16) . '.' . $extention);
+            $extension = $profilePhoto->extension();
+            $file_name = (Str::random(16) . '.' . $extension);
             $path = $profilePhoto->move('./storage/photoAssistant', $file_name);
             $url = Storage::url("/photoAssistant/" . $file_name);
 
@@ -87,7 +87,7 @@ class AssistantService
                 'assistant_id' => $assistantId,
                 'picture_filename' => $file_name,
                 'picture_imagename' => $photoNameExt,
-                'picture_mime' => $extention,
+                'picture_mime' => $extension,
                 'picture_path' => $url
             ]);
 
@@ -330,28 +330,24 @@ class AssistantService
 
     public function putAssistantPicture($data, $userId)
     {
+        $dataAssistant = $this->getAssistantByUserId($userId);
+
+        if ($dataAssistant == null) {
+            throw new NotFoundException('data assistant tidak ada');
+        }
+
+        $dataAssistantPicture = $dataAssistant->mAssistantPicture;
+
+        $pathOldPhoto = './storage/photoAssistant/' . $dataAssistantPicture->picture_filename;
+
         try {
             DB::beginTransaction();
 
-            $dataPhoto = $data;
-            $dataAssistant = $this->getAssistantByUserId($userId);
-
-            if ($dataAssistant == null) {
-                throw new NotFoundException('data assistant tidak ada');
-            }
-
-            $dataAssistantPicture = $dataAssistant->mAssistantPicture;
-
-            $pathOldPhoto = './storage/photoAssistant/' . $dataAssistantPicture->picture_filename;
-
-            if (isset($pathOldPhoto)) {
-                File::delete($pathOldPhoto);
-            }
-
             //Link Photo to Storage
+            $dataPhoto = $data;
             $photoNameExt = $dataPhoto->getClientOriginalName();
-            $extention = $dataPhoto->extension();
-            $file_name = (Str::random(16) . '.' . $extention);
+            $extension = $dataPhoto->extension();
+            $file_name = (Str::random(16) . '.' . $extension);
             $path = $dataPhoto->move('./storage/photoAssistant', $file_name);
             $url = Storage::url("/photoAssistant/" . $file_name);
 
@@ -359,9 +355,16 @@ class AssistantService
                 'assistant_id' => $dataAssistant->assistant_id,
                 'picture_filename' => $file_name,
                 'picture_imagename' => $photoNameExt,
-                'picture_mime' => $extention,
+                'picture_mime' => $extension,
                 'picture_path' => $url
             ]);
+
+            if (isset($pathOldPhoto)) {
+                File::delete($pathOldPhoto);
+            }
+
+            $dataOldPhoto = MAssistantPicture::where('picture_filename', $dataAssistantPicture->picture_filename);
+            $dataOldPhoto->delete();
 
             DB::commit();
         } catch (Exception $e) {
@@ -371,10 +374,8 @@ class AssistantService
                 File::delete($path);
             }
 
-            throw new Exception($e->getMessage());
+            throw new HttpException(500, $e->getMessage());
         }
-
-        return $dataPhoto;
     }
 
     public function putAssistantAddresByUserId($data, $userId)
