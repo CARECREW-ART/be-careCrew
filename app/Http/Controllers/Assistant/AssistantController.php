@@ -9,6 +9,7 @@ use App\Http\Requests\Assistant\AssistantFavoritePostRequest as AssistantFavPost
 use App\Http\Requests\Assistant\AssistantPicturePutRequest;
 use App\Http\Requests\Assistant\AssistantPostRequest;
 use App\Http\Requests\Assistant\AssistantPutRequest;
+use App\Http\Requests\User\UserPasswordPutRequest as PasswordChange;
 use App\Services\Assistant\AssistantService;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
@@ -121,6 +122,17 @@ class AssistantController extends Controller
         }
 
         return response()->json(['message' => "Data Assistant Berhasil ditambahkan ke Favorite"], 201);
+    }
+
+    public function putAssistantPassword(PasswordChange $req)
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        $dataValidated = $req->validated();
+
+        $this->userService->changePasswordUser($userId, $dataValidated['new_password'], $dataValidated['old_password']);
+
+        return response()->json(['message' => 'password berhasil diganti'], 200);
     }
 
     public function getAssistantFavoriteByUserId()

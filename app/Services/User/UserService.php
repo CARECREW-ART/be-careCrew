@@ -2,6 +2,7 @@
 
 namespace App\Services\User;
 
+use App\Exceptions\CustomInvariantException;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Error;
@@ -67,6 +68,32 @@ class UserService
 
             return [$user->user_id, 'success'];
         } catch (Exception $e) {
+            throw new Exception($e->getMessage(), 500);
+        }
+    }
+
+    public function changePasswordUser($userId, $newPassword, $oldPassword)
+    {
+        $hashedPassword = Hash::make($newPassword, ['rounds' => 12]);
+
+        $user = User::where('user_id', $userId)->first();
+
+        $resultPassword = Hash::check($oldPassword, $user->password);
+
+        if (!$resultPassword) {
+            throw new CustomInvariantException('Kata Sandi Lama Anda Tidak Sesuai');
+        }
+
+        try {
+            DB::beginTransaction();
+            $dataUser = User::where('user_id', $userId);
+            $dataUser->update([
+                'password' => $hashedPassword
+            ]);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+
             throw new Exception($e->getMessage(), 500);
         }
     }

@@ -42,7 +42,7 @@ class CustomerPostRequest extends FormRequest
                 'date',
                 'date_format:Y-m-d',
                 'before_or_equal:' . date("Y-m-d", strtotime("-18 year")),
-                'after_or_equal:' . date("Y-m-d", strtotime("-55 year"))
+                'after_or_equal:' . date("Y-m-d", strtotime("-70 year"))
             ],
         ];
     }

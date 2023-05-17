@@ -30,6 +30,7 @@ Route::controller(CustomerController::class)->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/customer/profile/settings', 'getCustomerByUserId');
         Route::put('/customer/profile/settings', 'putDetailCustomer')->middleware('CustomerRole');
+        Route::put('/customer/profile/settings/password', 'putCustomerPassword')->middleware('CustomerRole');
         Route::put('/customer/profile/settings/address', 'putCustomerAddressByUserId')->middleware('CustomerRole');
         Route::post('/customer/profile/settings/profilePicture', 'putCustomerPictureByUserId')->middleware('CustomerRole');
     });
@@ -42,6 +43,7 @@ Route::controller(AssistantController::class)->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/assistant/profile/settings', 'getAssistantByUserId')->middleware('AssistantRole');
         Route::put('/assistant/profile/settings', 'putAssistantByUserId')->middleware('AssistantRole');
+        Route::put('/assistant/profile/settings/password', 'putAssistantPassword')->middleware('AssistantRole');
         Route::put('/assistant/profile/settings/address', 'putAssistantAddresByUserId')->middleware('AssistantRole');
         Route::put('/assistant/profile/settings/bank', 'putAssistantBankByUserId')->middleware('AssistantRole');
         Route::post('/assistant/profile/settings/profilePicture', 'putAssistantPictureByUserId')->middleware('AssistantRole');
