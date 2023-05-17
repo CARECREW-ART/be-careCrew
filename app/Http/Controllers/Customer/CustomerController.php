@@ -6,6 +6,7 @@ use App\Exceptions\NotFoundException;
 use App\Services\User\UserService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\CustomerAddressPutRequest;
+use App\Http\Requests\Customer\CustomerPicturePutRequest;
 use App\Http\Requests\Customer\CustomerPostRequest;
 use App\Http\Requests\Customer\CustomerPutRequest;
 use Illuminate\Http\Request;
@@ -73,7 +74,7 @@ class CustomerController extends Controller
             $photoNameExt = $profilePhoto->getClientOriginalName();
             $extention = $profilePhoto->extension();
             $file_name = (Str::random(16) . '.' . $extention);
-            $path = $profilePhoto->move('./storage/photocustomer', $file_name);
+            $path = $profilePhoto->move('./storage/photoCustomer', $file_name);
             $url = Storage::url("/photocustomer/" . $file_name);
 
             MCustormerPicture::create([
@@ -182,7 +183,7 @@ class CustomerController extends Controller
         }
     }
 
-    public function putCustomerByUserId(CustomerAddressPutRequest $req)
+    public function putCustomerAddressByUserId(CustomerAddressPutRequest $req)
     {
         $userId = auth('sanctum')->user()->user_id;
 
@@ -211,6 +212,101 @@ class CustomerController extends Controller
             return response()->json(['message' => 'data customer berhasil diupdate']);
         } catch (Exception $e) {
             DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function putCustomerPictureByUserId(CustomerPicturePutRequest $req)
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        $dataValid = $req->validated();
+
+        $dataCustomer = MCustomer::where('user_id', $userId)->with([
+            'customerGender' => function ($customerGender) {
+                $customerGender->select(
+                    'gender_bit',
+                    'gender_value'
+                );
+            },
+            'mCustomerPicture' => function ($customerPicture) {
+                $customerPicture->select(
+                    'picture_id',
+                    'customer_id',
+                    'picture_filename',
+                    'picture_path'
+                );
+            },
+            'mCustomerAddress' => function ($customerAddress) {
+                $customerAddress->select(
+                    'address_id',
+                    'customer_id',
+                    'province_id',
+                    'city_id',
+                    'district_id',
+                    'village_id',
+                    'postalzip_id',
+                    'address_street',
+                    'address_other'
+                );
+            },
+            'emailUser' => function ($email) {
+                $email->select(
+                    'user_id',
+                    'email'
+                );
+            },
+        ])->select(
+            'customer_id',
+            'user_id',
+            'customer_fullname',
+            'customer_nickname',
+            'customer_username',
+            'customer_telp',
+            'customer_gender',
+            'customer_birthdate',
+        )->first();
+
+        $dataCustomerPicture = $dataCustomer->mCustomerPicture;
+
+        $pathOldPhoto = './storage/photocustomer/' . $dataCustomerPicture->picture_filename;
+
+        try {
+            DB::beginTransaction();
+
+            //Link Photo to Storage
+            $dataPhoto = $dataValid['customer_picture'];
+            $photoNameExt = $dataPhoto->getClientOriginalName();
+            $extension = $dataPhoto->extension();
+            $file_name = (Str::random(16) . '.' . $extension);
+            $path = $dataPhoto->move('./storage/photocustomer', $file_name);
+            $url = Storage::url("/photocustomer/" . $file_name);
+
+            MCustormerPicture::create([
+                'customer_id' => $dataCustomer->customer_id,
+                'picture_filename' => $file_name,
+                'picture_imagename' => $photoNameExt,
+                'picture_mime' => $extension,
+                'picture_path' => $url
+            ]);
+
+            if (isset($pathOldPhoto)) {
+                File::delete($pathOldPhoto);
+            }
+
+            $dataOldPhoto = MCustormerPicture::where('picture_filename', $dataCustomerPicture->picture_filename);
+            $dataOldPhoto->delete();
+
+            DB::commit();
+
+            return response()->json(['message' => 'data profile picture berhasil diperbaharui'], 201);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            if (isset($path)) {
+                File::delete($path);
+            }
+
             throw new Exception($e->getMessage());
         }
     }
