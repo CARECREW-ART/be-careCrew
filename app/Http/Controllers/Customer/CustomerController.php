@@ -222,12 +222,6 @@ class CustomerController extends Controller
 
         $dataValid = $req->validated();
 
-        [$data, $message] = $this->userService->verifyUserValidPassword($userId, $dataValid['password']);
-
-        if (!$data) {
-            return response()->json(['message' => $message], 400);
-        }
-
         $dataCustomer = MCustomer::where('user_id', $userId)->with([
             'customerGender' => function ($customerGender) {
                 $customerGender->select(
