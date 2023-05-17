@@ -9,6 +9,7 @@ use App\Http\Requests\Customer\CustomerAddressPutRequest;
 use App\Http\Requests\Customer\CustomerPicturePutRequest;
 use App\Http\Requests\Customer\CustomerPostRequest;
 use App\Http\Requests\Customer\CustomerPutRequest;
+use App\Http\Requests\User\UserPasswordPutRequest as PasswordChange;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -309,5 +310,16 @@ class CustomerController extends Controller
 
             throw new Exception($e->getMessage());
         }
+    }
+
+    public function putCustomerPassword(PasswordChange $req)
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        $dataValidated = $req->validated();
+
+        $this->userService->changePasswordUser($userId, $dataValidated['new_password'], $dataValidated['old_password']);
+
+        return response()->json(['message' => 'password berhasil diganti'], 200);
     }
 }
