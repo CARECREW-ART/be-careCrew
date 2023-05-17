@@ -23,7 +23,6 @@ class AssistantPicturePutRequest extends FormRequest
     {
         return [
             'assistant_picture' => 'required|mimes:jpeg,jpg,png|min:30|max:10240',
-            "password" => "required",
         ];
     }
 
@@ -31,7 +30,6 @@ class AssistantPicturePutRequest extends FormRequest
     {
         return [
             'assistant_picture' => 'Foto Profile',
-            'password' => 'Kata Sandi'
         ];
     }
 }

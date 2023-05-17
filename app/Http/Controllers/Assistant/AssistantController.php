@@ -103,12 +103,6 @@ class AssistantController extends Controller
 
         $dataValidated = $req->validated();
 
-        [$data, $message] = $this->userService->verifyUserValidPassword($userId, $dataValidated['password']);
-
-        if (!$data) {
-            return response()->json(['message' => $message], 400);
-        }
-
         $this->assistantService->putAssistantPicture($dataValidated['assistant_picture'], $userId);
 
         return response()->json(['message' => 'foto profile berhasil diperbaharui'], 201);
