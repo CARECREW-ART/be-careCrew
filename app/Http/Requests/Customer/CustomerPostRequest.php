@@ -27,7 +27,7 @@ class CustomerPostRequest extends FormRequest
             'customer.customer_fullname' => 'required|string|max:160',
             'customer.customer_nickname' => 'required|string|max:40',
             'customer.customer_username' => 'required|unique:m_customers,customer_username',
-            'customer.customer_telp' => 'required|string|max:16',
+            'customer.customer_telp' => 'required|string|max:16|unique:m_customers,customer_telp',
             'customer_address.province_id' => 'exists:m_provinces,province_id|',
             'customer_address.city_id' => 'exists:m_cities,city_id|',
             'customer_address.district_id' => 'exists:m_districts,district_id|nullable',
