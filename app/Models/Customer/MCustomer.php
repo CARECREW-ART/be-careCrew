@@ -35,7 +35,7 @@ class MCustomer extends Model
 
     public function customerGender()
     {
-        return $this->hasOne(MGender::class, 'gender_bit', 'assistant_gender');
+        return $this->hasOne(MGender::class, 'gender_bit', 'customer_gender');
     }
 
     public function emailUser()
