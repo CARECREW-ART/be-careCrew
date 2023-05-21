@@ -163,6 +163,55 @@ class AssistantService
             'assistant_isactive',
         )->first();
 
+        if ($dataAssistant == null) {
+            throw new NotFoundException('Data Customer Tidak Ada');
+        }
+
+        return $dataAssistant;
+    }
+
+    public function getAssistantBankByUserId($userId)
+    {
+        $dataAssistant = MAssistant::where('user_id', $userId)->first();
+
+        if ($dataAssistant == null) {
+            throw new NotFoundException('Data Customer Tidak Ada');
+        }
+
+        $dataBank = $dataAssistant->mAssistantBankName($dataAssistant->assistant_id);
+
+        return $dataBank;
+    }
+
+    public function getAssistantAddressByUserId($userId)
+    {
+        $dataAssistant = MAssistant::where('user_id', $userId)->with([
+            'mAssistantAddress' => function ($assistantAddress) {
+                $assistantAddress->select(
+                    'address_id',
+                    'assistant_id',
+                    'address_street',
+                    'address_other'
+                );
+            },
+        ])->first('assistant_id');
+
+        if ($dataAssistant == null) {
+            throw new NotFoundException('Data Customer Tidak Ada');
+        }
+
+        $dataCity = $dataAssistant->mAssistantCity($dataAssistant->assistant_id);
+        $dataProvince = $dataAssistant->mAssistantProvince($dataAssistant->assistant_id);
+        $dataDistrict = $dataAssistant->mAssistantDistrict($dataAssistant->assistant_id);
+        $dataVillage = $dataAssistant->mAssistantVillage($dataAssistant->assistant_id);
+        $dataPostalZip = $dataAssistant->mAssistantPostalZip($dataAssistant->assistant_id);
+
+        $dataAssistant['m_city'] = $dataCity;
+        $dataAssistant['m_province'] = $dataProvince;
+        $dataAssistant['m_district'] = $dataDistrict;
+        $dataAssistant['m_village'] = $dataVillage;
+        $dataAssistant['m_postalzip'] = $dataPostalZip;
+
         return $dataAssistant;
     }
 

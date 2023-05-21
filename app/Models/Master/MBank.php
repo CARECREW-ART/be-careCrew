@@ -13,4 +13,6 @@ class MBank extends Model
         'bank_code',
         'bank_name'
     ];
+
+    protected $primaryKey = 'bank_id';
 }

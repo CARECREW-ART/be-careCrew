@@ -45,6 +45,8 @@ Route::controller(AssistantController::class)->group(function () {
         Route::put('/assistant/profile/settings', 'putAssistantByUserId')->middleware('AssistantRole');
         Route::put('/assistant/profile/settings/password', 'putAssistantPassword')->middleware('AssistantRole');
         Route::put('/assistant/profile/settings/address', 'putAssistantAddresByUserId')->middleware('AssistantRole');
+        Route::get('/assistant/profile/settings/address', 'getAssistantAddressByUserId')->middleware('AssistantRole');
+        Route::get('/assistant/profile/settings/bank', 'getAssistantBankByUserId')->middleware('AssistantRole');
         Route::put('/assistant/profile/settings/bank', 'putAssistantBankByUserId')->middleware('AssistantRole');
         Route::post('/assistant/profile/settings/profilePicture', 'putAssistantPictureByUserId')->middleware('AssistantRole');
         Route::post('/assistant/c/favorite', 'postAssistantFavoriteByUserId')->middleware('CustomerRole');

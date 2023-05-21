@@ -49,6 +49,24 @@ class AssistantController extends Controller
         return response()->json(['data' => $dataAssistant], 200);
     }
 
+    public function getAssistantBankByUserId()
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        $dataAssistant = $this->assistantService->getAssistantBankByUserId($userId);
+
+        return response()->json(['data' => $dataAssistant], 200);
+    }
+
+    public function getAssistantAddressByUserId()
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        $dataAssistant = $this->assistantService->getAssistantAddressByUserId($userId);
+
+        return response()->json(['data' => $dataAssistant], 200);
+    }
+
     public function putAssistantByUserId(AssistantPutRequest $req)
     {
         $userId = auth('sanctum')->user()->user_id;

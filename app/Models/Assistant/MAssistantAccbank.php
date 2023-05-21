@@ -15,4 +15,6 @@ class MAssistantAccbank extends Model
         'accbank_name',
         'accbank_value'
     ];
+
+    protected $primaryKey = 'accbank_id';
 }
