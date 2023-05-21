@@ -163,12 +163,20 @@ class AssistantService
             'assistant_isactive',
         )->first();
 
+        if ($dataAssistant == null) {
+            throw new NotFoundException('Data Customer Tidak Ada');
+        }
+
         return $dataAssistant;
     }
 
     public function getAssistantBankByUserId($userId)
     {
         $dataAssistant = MAssistant::where('user_id', $userId)->first();
+
+        if ($dataAssistant == null) {
+            throw new NotFoundException('Data Customer Tidak Ada');
+        }
 
         $dataBank = $dataAssistant->mAssistantBankName($dataAssistant->assistant_id);
 
@@ -187,6 +195,10 @@ class AssistantService
                 );
             },
         ])->first('assistant_id');
+
+        if ($dataAssistant == null) {
+            throw new NotFoundException('Data Customer Tidak Ada');
+        }
 
         $dataCity = $dataAssistant->mAssistantCity($dataAssistant->assistant_id);
         $dataProvince = $dataAssistant->mAssistantProvince($dataAssistant->assistant_id);
