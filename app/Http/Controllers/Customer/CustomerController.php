@@ -184,6 +184,36 @@ class CustomerController extends Controller
         }
     }
 
+    public function getCustomerAddressByUserId()
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        $dataCustomer = Mcustomer::where('user_id', $userId)->with([
+            'mCustomerAddress' => function ($customerAddress) {
+                $customerAddress->select(
+                    'address_id',
+                    'customer_id',
+                    'address_street',
+                    'address_other'
+                );
+            },
+        ])->first('customer_id');
+
+        $dataCity = $dataCustomer->mCustomerCity($dataCustomer->customer_id);
+        $dataProvince = $dataCustomer->mCustomerProvince($dataCustomer->customer_id);
+        $dataDistrict = $dataCustomer->mCustomerDistrict($dataCustomer->customer_id);
+        $dataVillage = $dataCustomer->mCustomerVillage($dataCustomer->customer_id);
+        $dataPostalZip = $dataCustomer->mCustomerPostalZip($dataCustomer->customer_id);
+
+        $dataCustomer['m_city'] = $dataCity;
+        $dataCustomer['m_province'] = $dataProvince;
+        $dataCustomer['m_district'] = $dataDistrict;
+        $dataCustomer['m_village'] = $dataVillage;
+        $dataCustomer['m_postalzip'] = $dataPostalZip;
+
+        return response()->json(['data' => $dataCustomer], 200);
+    }
+
     public function putCustomerAddressByUserId(CustomerAddressPutRequest $req)
     {
         $userId = auth('sanctum')->user()->user_id;
@@ -204,9 +234,9 @@ class CustomerController extends Controller
                 return response()->json(['message' => 'data customer tidak ada'], 404);
             }
 
-            $dataAssistantAddrs = MCustomerAddress::where('customer_id', $customerId->customer_id);
+            $dataCustomerAddrs = MCustomerAddress::where('customer_id', $customerId->customer_id);
 
-            $dataAssistantAddrs->update($dataValid['customer_address']);
+            $dataCustomerAddrs->update($dataValid['customer_address']);
 
             DB::commit();
 

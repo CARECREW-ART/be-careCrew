@@ -31,6 +31,7 @@ Route::controller(CustomerController::class)->group(function () {
         Route::get('/customer/profile/settings', 'getCustomerByUserId');
         Route::put('/customer/profile/settings', 'putDetailCustomer')->middleware('CustomerRole');
         Route::put('/customer/profile/settings/password', 'putCustomerPassword')->middleware('CustomerRole');
+        Route::get('/customer/profile/settings/address', 'getCustomerAddressByUserId')->middleware('CustomerRole');
         Route::put('/customer/profile/settings/address', 'putCustomerAddressByUserId')->middleware('CustomerRole');
         Route::post('/customer/profile/settings/profilePicture', 'putCustomerPictureByUserId')->middleware('CustomerRole');
     });

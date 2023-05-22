@@ -164,7 +164,7 @@ class AssistantService
         )->first();
 
         if ($dataAssistant == null) {
-            throw new NotFoundException('Data Customer Tidak Ada');
+            throw new NotFoundException('Data Assistant Tidak Ada');
         }
 
         return $dataAssistant;
@@ -175,7 +175,7 @@ class AssistantService
         $dataAssistant = MAssistant::where('user_id', $userId)->first();
 
         if ($dataAssistant == null) {
-            throw new NotFoundException('Data Customer Tidak Ada');
+            throw new NotFoundException('Data Assistant Tidak Ada');
         }
 
         $dataBank = $dataAssistant->mAssistantBankName($dataAssistant->assistant_id);
@@ -197,7 +197,7 @@ class AssistantService
         ])->first('assistant_id');
 
         if ($dataAssistant == null) {
-            throw new NotFoundException('Data Customer Tidak Ada');
+            throw new NotFoundException('Data Assistant Tidak Ada');
         }
 
         $dataCity = $dataAssistant->mAssistantCity($dataAssistant->assistant_id);
