@@ -177,7 +177,7 @@ class CustomerController extends Controller
             $dataCustomer->update($dataValid['customer']);
             DB::commit();
 
-            return response()->json(['message' => 'data customer berhasil diupdate'], 201);
+            return response()->json(['message' => 'data customer berhasil diupdate'], 200);
         } catch (Exception $e) {
             DB::rollBack();
             throw new Exception($e->getMessage());
@@ -240,7 +240,7 @@ class CustomerController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'data customer berhasil diupdate']);
+            return response()->json(['message' => 'data customer berhasil diupdate'], 200);
         } catch (Exception $e) {
             DB::rollBack();
             throw new Exception($e->getMessage());
@@ -330,7 +330,7 @@ class CustomerController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'data profile picture berhasil diperbaharui'], 201);
+            return response()->json(['message' => 'data profile picture berhasil diperbaharui'], 200);
         } catch (Exception $e) {
             DB::rollBack();
 

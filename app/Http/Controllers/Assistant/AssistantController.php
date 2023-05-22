@@ -124,7 +124,7 @@ class AssistantController extends Controller
 
         $this->assistantService->putAssistantPicture($dataValidated['assistant_picture'], $userId);
 
-        return response()->json(['message' => 'foto profile berhasil diperbaharui'], 201);
+        return response()->json(['message' => 'foto profile berhasil diperbaharui'], 200);
     }
 
     public function postAssistantFavoriteByUserId(AssistantFavPostReq $req)
