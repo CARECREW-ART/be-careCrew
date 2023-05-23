@@ -80,15 +80,14 @@ class AssistantService
             $photoNameExt = $profilePhoto->getClientOriginalName();
             $extension = $profilePhoto->extension();
             $file_name = (Str::random(16) . '.' . $extension);
-            $path = $profilePhoto->move('./storage/photoAssistant', $file_name);
-            $url = Storage::url("/photoAssistant/" . $file_name);
+            $path = $profilePhoto->move('storage\photoAssistant', $file_name);
 
             MAssistantPicture::create([
                 'assistant_id' => $assistantId,
                 'picture_filename' => $file_name,
                 'picture_imagename' => $photoNameExt,
                 'picture_mime' => $extension,
-                'picture_path' => $url
+                'picture_path' => $path
             ]);
 
             DB::commit();
@@ -162,6 +161,8 @@ class AssistantService
             'assistant_experience',
             'assistant_isactive',
         )->first();
+
+        $dataAssistant['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $dataAssistant['mAssistantPicture']['picture_filename']);
 
         if ($dataAssistant == null) {
             throw new NotFoundException('Data Assistant Tidak Ada');
@@ -260,10 +261,16 @@ class AssistantService
 
         if ($perPage !== null) {
             $result = $dataAssistant->appends(['sort' => $sort, 'valueSearch' => $valueSearch, 'valueSort' => $valueSort, 'perPage' => $perPage]);
+            foreach ($result as $rQuery) {
+                $rQuery['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $rQuery['mAssistantPicture']['picture_filename']);
+            }
             return $result;
         }
 
         $result = $dataAssistant->latest()->paginate(10)->appends(['sort' => $sort, 'valueSearch' => $valueSearch, 'valueSort' => $valueSort, 'perPage' => $perPage]);
+        foreach ($result as $rQuery) {
+            $rQuery['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $rQuery['mAssistantPicture']['picture_filename']);
+        }
         return $result;
     }
 
@@ -308,6 +315,8 @@ class AssistantService
         $dataCityAssistant = $dataAssistant->mAssistantCity($dataAssistant->assistant_id);
 
         $dataAssistant['city_name'] = $dataCityAssistant->city_name;
+
+        $dataAssistant['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $dataAssistant['mAssistantPicture']['picture_filename']);
 
         return $dataAssistant;
     }
@@ -397,15 +406,14 @@ class AssistantService
             $photoNameExt = $dataPhoto->getClientOriginalName();
             $extension = $dataPhoto->extension();
             $file_name = (Str::random(16) . '.' . $extension);
-            $path = $dataPhoto->move('./storage/photoAssistant', $file_name);
-            $url = Storage::url("/photoAssistant/" . $file_name);
+            $path = $dataPhoto->move('storage\photoAssistant', $file_name);
 
             MAssistantPicture::create([
                 'assistant_id' => $dataAssistant->assistant_id,
                 'picture_filename' => $file_name,
                 'picture_imagename' => $photoNameExt,
                 'picture_mime' => $extension,
-                'picture_path' => $url
+                'picture_path' => $path
             ]);
 
             if (isset($pathOldPhoto)) {

@@ -75,15 +75,14 @@ class CustomerController extends Controller
             $photoNameExt = $profilePhoto->getClientOriginalName();
             $extention = $profilePhoto->extension();
             $file_name = (Str::random(16) . '.' . $extention);
-            $path = $profilePhoto->move('./storage/photoCustomer', $file_name);
-            $url = Storage::url("/photocustomer/" . $file_name);
+            $path = $profilePhoto->move('storage\photocustomer', $file_name);
 
             MCustormerPicture::create([
                 'customer_id' => $customerId->customer_id,
                 'picture_filename' => $file_name,
                 'picture_imagename' => $photoNameExt,
                 'picture_mime' => $extention,
-                'picture_path' => $url
+                'picture_path' => $path
             ]);
             DB::commit();
 
@@ -151,6 +150,8 @@ class CustomerController extends Controller
             'customer_gender',
             'customer_birthdate',
         )->first();
+
+        $dataCustomer['mCustomerPicture']['picture_path'] = Storage::url("/photocustomer/" . $dataCustomer['mCustomerPicture']['picture_filename']);
 
         if ($dataCustomer == null) {
             throw new NotFoundException('Data Customer Tidak Ada');
@@ -310,15 +311,14 @@ class CustomerController extends Controller
             $photoNameExt = $dataPhoto->getClientOriginalName();
             $extension = $dataPhoto->extension();
             $file_name = (Str::random(16) . '.' . $extension);
-            $path = $dataPhoto->move('./storage/photocustomer', $file_name);
-            $url = Storage::url("/photocustomer/" . $file_name);
+            $path = $dataPhoto->move('storage\photocustomer', $file_name);
 
             MCustormerPicture::create([
                 'customer_id' => $dataCustomer->customer_id,
                 'picture_filename' => $file_name,
                 'picture_imagename' => $photoNameExt,
                 'picture_mime' => $extension,
-                'picture_path' => $url
+                'picture_path' => $path
             ]);
 
             if (isset($pathOldPhoto)) {
