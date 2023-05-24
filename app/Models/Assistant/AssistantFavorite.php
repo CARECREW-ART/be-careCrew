@@ -16,6 +16,11 @@ class AssistantFavorite extends Model
 
     public function mAssistant()
     {
-        return $this->hasMany(MAssistant::class, "assistant_id", "assistant_id");
+        return $this->hasOne(MAssistant::class, "assistant_id", "assistant_id");
+    }
+
+    public function mAssistantPicture()
+    {
+        return $this->hasOneThrough(MAssistantPicture::class, MAssistant::class, 'assistant_id', 'assistant_id');
     }
 }

@@ -133,13 +133,9 @@ class AssistantController extends Controller
 
         $usernameValidated = $req->validated('assistant_username');
 
-        [$data, $message] = $this->assistantService->postAsisstantFavoriteByUserId($usernameValidated, $userId);
+        $this->assistantService->postAssistantFavoriteByUserId($usernameValidated, $userId);
 
-        if (!$data) {
-            return response()->json(['message' => $message], 200);
-        }
-
-        return response()->json(['message' => "Data Assistant Berhasil ditambahkan ke Favorite"], 201);
+        return response()->json(['message' => 'Berhasil Menambahkan ke Favorite'], 201);
     }
 
     public function putAssistantPassword(PasswordChange $req)
@@ -159,7 +155,7 @@ class AssistantController extends Controller
 
         $data = $this->assistantService->getAssistantFavoriteByUserId($userId);
 
-        return response()->json(['data' => $data], 200);
+        return response()->json($data, 200);
     }
 
     public function getAssistant(Request $req)

@@ -2,6 +2,7 @@
 
 namespace App\Services\Assistant;
 
+use App\Exceptions\CustomInvariantException;
 use App\Exceptions\NotFoundException;
 use App\Models\Assistant\AssistantFavorite;
 use App\Models\Assistant\MAssistant;
@@ -262,6 +263,9 @@ class AssistantService
         if ($perPage !== null) {
             $result = $dataAssistant->appends(['sort' => $sort, 'valueSearch' => $valueSearch, 'valueSort' => $valueSort, 'perPage' => $perPage]);
             foreach ($result as $rQuery) {
+                if ($rQuery['mAssistantPicture'] == null) {
+                    continue;
+                }
                 $rQuery['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $rQuery['mAssistantPicture']['picture_filename']);
             }
             return $result;
@@ -269,6 +273,9 @@ class AssistantService
 
         $result = $dataAssistant->latest()->paginate(10)->appends(['sort' => $sort, 'valueSearch' => $valueSearch, 'valueSort' => $valueSort, 'perPage' => $perPage]);
         foreach ($result as $rQuery) {
+            if ($rQuery['mAssistantPicture'] == null) {
+                continue;
+            }
             $rQuery['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $rQuery['mAssistantPicture']['picture_filename']);
         }
         return $result;
@@ -321,19 +328,19 @@ class AssistantService
         return $dataAssistant;
     }
 
-    public function postAsisstantFavoriteByUserId($username, $userId)
+    public function postAssistantFavoriteByUserId($username, $userId)
     {
+        $assistantId = $this->getDetailAssistantById($username);
+
+        $dataAssistantId = $this->getAssistantFavoriteByUserId($userId);
+
+        foreach ($dataAssistantId as $aId) {
+            if ($aId['assistant_id'] == $assistantId->assistant_id) {
+                throw new CustomInvariantException("Data Assistant Favorite Sudah Ada");
+            }
+        }
         try {
             DB::beginTransaction();
-            $assistantId = $this->getDetailAssistantById($username);
-
-            $dataAssistantId = $this->getAssistantFavoriteByUserId($userId);
-
-            foreach ($dataAssistantId as $aId) {
-                if ($aId['assistant_id'] == $assistantId->assistant_id) {
-                    return [false, "Data Assistant Favorite Sudah Ada"];
-                }
-            }
 
             AssistantFavorite::create([
                 "user_id" => $userId,
@@ -360,14 +367,23 @@ class AssistantService
                         'assistant_salary',
                         'assistant_isactive'
                     );
-                }
+                },
+                "mAssistantPicture" => function ($mAssistantPicture) {
+                    $mAssistantPicture->select(
+                        'picture_filename',
+                        'picture_imagename',
+                        'picture_mime',
+                        'picture_path'
+                    );
+                },
             ],
         )->select('id', 'assistant_id', 'user_id')->get();
 
-        foreach ($dataAssistant as $aId) {
-            if ($aId['assistant_id'] == 12) {
-                return true;
+        foreach ($dataAssistant as $dAI) {
+            if ($dAI['mAssistantPicture'] == null) {
+                continue;
             }
+            $dAI['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $dAI['mAssistantPicture']['picture_filename']);
         }
 
         return $dataAssistant;
