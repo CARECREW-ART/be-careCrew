@@ -160,6 +160,63 @@ class CustomerController extends Controller
         return response()->json(['data' => $dataCustomer], 200);
     }
 
+    public function getCustomer(Request $req)
+    {
+        $valueSearch = $req['valueSearch'];
+        $valueSort = $req['valueSort'];
+        $sort = $req['sort'];
+        $perPage = $req['perPage'];
+
+        $dataCustomer = MCustomer::with([
+            'mCustomerPicture' => function ($customerPicture) {
+                $customerPicture->select(
+                    'picture_id',
+                    'customer_id',
+                    'picture_filename',
+                    'picture_path'
+                );
+            },
+        ])->select(
+            'customer_id',
+            'customer_fullname',
+            'customer_nickname',
+            'customer_username',
+        )->where(function ($query) use ($valueSearch) {
+            $query->where(
+                'customer_fullname',
+                'LIKE',
+                '%' . $valueSearch . '%'
+            )->orWhere(
+                'customer_nickname',
+                'LIKE',
+                '%' . $valueSearch . '%'
+            );
+            return $query;
+        });
+
+        if (isset($valueSort) && isset($valueSort)) {
+            $dataCustomer = $dataCustomer->orderBy($valueSort, $sort);
+        }
+
+        if (isset($perPage)) {
+            $dataCustomer = $dataCustomer->latest()->paginate($perPage);
+        }
+
+        if ($perPage !== null) {
+            $result = $dataCustomer->appends(['sort' => $sort, 'valueSearch' => $valueSearch, 'valueSort' => $valueSort, 'perPage' => $perPage]);
+            foreach ($result as $rQuery) {
+                $rQuery['mCustomerPicture']['picture_path'] = Storage::url("/photocustomer/" . $rQuery['mCustomerPicture']['picture_filename']);
+            }
+            return $result;
+        }
+
+        $result = $dataCustomer->latest()->paginate(10)->appends(['sort' => $sort, 'valueSearch' => $valueSearch, 'valueSort' => $valueSort, 'perPage' => $perPage]);
+        foreach ($result as $rQuery) {
+            $rQuery['mCustomerPicture']['picture_path'] = Storage::url("/photocustomer/" . $rQuery['mCustomerPicture']['picture_filename']);
+        }
+        return $result;
+    }
+
     public function putDetailCustomer(CustomerPutRequest $req)
     {
         $userId = auth('sanctum')->user()->user_id;

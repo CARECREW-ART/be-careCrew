@@ -28,6 +28,7 @@ Route::prefix('auth')->group(function () {
 Route::controller(CustomerController::class)->group(function () {
     Route::post('/customer', 'createCustomer');
     Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/customer', 'getCustomer')->middleware('AdminRole');
         Route::get('/customer/profile/settings', 'getCustomerByUserId');
         Route::put('/customer/profile/settings', 'putDetailCustomer')->middleware('CustomerRole');
         Route::put('/customer/profile/settings/password', 'putCustomerPassword')->middleware('CustomerRole');
