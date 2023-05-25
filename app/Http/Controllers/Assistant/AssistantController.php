@@ -127,6 +127,16 @@ class AssistantController extends Controller
         return response()->json(['message' => 'foto profile berhasil diperbaharui'], 200);
     }
 
+    public function deleteAssistantFavoriteByUserId(AssistantFavPostReq $req)
+    {
+        $userId = auth('sanctum')->user()->user_id;
+        $usernameValidated = $req->validated('assistant_username');
+
+        $this->assistantService->deleteAssistantFavoriteByUserId($usernameValidated, $userId);
+
+        return response()->json(['message' => 'Berhasil Menghapus dari Favorite'], 200);
+    }
+
     public function postAssistantFavoriteByUserId(AssistantFavPostReq $req)
     {
         $userId = auth('sanctum')->user()->user_id;

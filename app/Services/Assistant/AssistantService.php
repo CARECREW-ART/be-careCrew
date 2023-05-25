@@ -335,7 +335,7 @@ class AssistantService
         $dataAssistantId = $this->getAssistantFavoriteByUserId($userId);
 
         foreach ($dataAssistantId as $aId) {
-            if ($aId['assistant_id'] == $assistantId->assistant_id) {
+            if (($aId['assistant_id'] == $assistantId->assistant_id) && ($aId['user_id'] == $userId)) {
                 throw new CustomInvariantException("Data Assistant Favorite Sudah Ada");
             }
         }
@@ -350,6 +350,23 @@ class AssistantService
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function deleteAssistantFavoriteByUserId($username, $userId)
+    {
+        $assistantId = $this->getDetailAssistantById($username);
+
+        try {
+            DB::beginTransaction();
+            $dataAssistantFavorite = AssistantFavorite::where('assistant_id', $assistantId->assistant_id)->where('user_id', $userId);
+
+            $dataAssistantFavorite->delete();
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+
             throw new Exception($e->getMessage());
         }
     }

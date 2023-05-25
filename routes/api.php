@@ -52,6 +52,7 @@ Route::controller(AssistantController::class)->group(function () {
         Route::put('/assistant/profile/settings/bank', 'putAssistantBankByUserId')->middleware('AssistantRole');
         Route::post('/assistant/profile/settings/profilePicture', 'putAssistantPictureByUserId')->middleware('AssistantRole');
         Route::post('/assistant/c/favorite', 'postAssistantFavoriteByUserId')->middleware('CustomerRole');
+        Route::delete('/assistant/c/favorite', 'deleteAssistantFavoriteByUserId')->middleware('CustomerRole');
         Route::get('/assistant/c/favorite', 'getAssistantFavoriteByUserId')->middleware('CustomerRole');
     });
 });
