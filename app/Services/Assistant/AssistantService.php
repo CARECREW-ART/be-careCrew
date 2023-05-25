@@ -376,7 +376,17 @@ class AssistantService
         $dataAssistant = AssistantFavorite::where('user_id', $userId)->with(
             [
                 "mAssistant" => function ($mAssistant) {
-                    $mAssistant->select(
+                    $mAssistant->with([
+                        'mAssistantPicture' => function ($mAssistantPicture) {
+                            $mAssistantPicture->select(
+                                'picture_id',
+                                'assistant_id',
+                                'picture_filename',
+                                'picture_mime',
+                                'picture_path'
+                            );
+                        },
+                    ])->select(
                         'assistant_id',
                         'assistant_fullname',
                         'assistant_nickname',
@@ -385,22 +395,14 @@ class AssistantService
                         'assistant_isactive'
                     );
                 },
-                "mAssistantPicture" => function ($mAssistantPicture) {
-                    $mAssistantPicture->select(
-                        'picture_filename',
-                        'picture_imagename',
-                        'picture_mime',
-                        'picture_path'
-                    );
-                },
             ],
         )->select('id', 'assistant_id', 'user_id')->get();
 
         foreach ($dataAssistant as $dAI) {
-            if ($dAI['mAssistantPicture'] == null) {
+            if ($dAI['mAssistant']['mAssistantPicture'] == null) {
                 continue;
             }
-            $dAI['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $dAI['mAssistantPicture']['picture_filename']);
+            $dAI['mAssistant']['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $dAI['mAssistant']['mAssistantPicture']['picture_filename']);
         }
 
         return $dataAssistant;

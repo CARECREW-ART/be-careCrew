@@ -18,9 +18,4 @@ class AssistantFavorite extends Model
     {
         return $this->hasOne(MAssistant::class, "assistant_id", "assistant_id");
     }
-
-    public function mAssistantPicture()
-    {
-        return $this->hasOneThrough(MAssistantPicture::class, MAssistant::class, 'assistant_id', 'assistant_id');
-    }
 }
