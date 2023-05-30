@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Assistant\AssistantController;
 use App\Http\Controllers\Authentication\AuthenticationController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Master\MasterController;
+use App\Http\Controllers\Order\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +37,23 @@ Route::controller(CustomerController::class)->group(function () {
         Route::get('/customer/profile/settings/address', 'getCustomerAddressByUserId')->middleware('CustomerRole');
         Route::put('/customer/profile/settings/address', 'putCustomerAddressByUserId')->middleware('CustomerRole');
         Route::post('/customer/profile/settings/profilePicture', 'putCustomerPictureByUserId')->middleware('CustomerRole');
+    });
+});
+
+Route::controller(OrderController::class)->group(function () {
+    Route::post('/orders', 'order');
+});
+
+Route::prefix('admin')->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::controller(AdminController::class)->group(function () {
+            Route::middleware('AdminRole')->group(function () {
+                Route::get('assistant', 'getAssistant');
+                Route::get('/assistant/{userId}', 'getAssistantDetail');
+                Route::get('customer', 'getCustomer');
+                Route::get('/customer/{userId}', 'getCustomerDetail');
+            });
+        });
     });
 });
 

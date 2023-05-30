@@ -163,11 +163,15 @@ class AssistantService
             'assistant_isactive',
         )->first();
 
-        $dataAssistant['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $dataAssistant['mAssistantPicture']['picture_filename']);
-
         if ($dataAssistant == null) {
             throw new NotFoundException('Data Assistant Tidak Ada');
         }
+
+        if ($dataAssistant['mCustomerPicture'] != null) {
+            $dataAssistant['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $dataAssistant['mAssistantPicture']['picture_filename']);
+        }
+
+        $dataAssistant['m_assistant_picture'] = null;
 
         return $dataAssistant;
     }
@@ -246,6 +250,76 @@ class AssistantService
                 '%' . $valueSearch . '%'
             )->orWhere(
                 'assistant_nickname',
+                'LIKE',
+                '%' . $valueSearch . '%'
+            );
+            return $query;
+        });
+
+        if (isset($valueSort) && isset($valueSort)) {
+            $dataAssistant = $dataAssistant->orderBy($valueSort, $sort);
+        }
+
+        if (isset($perPage)) {
+            $dataAssistant = $dataAssistant->latest()->paginate($perPage);
+        }
+
+        if ($perPage !== null) {
+            $result = $dataAssistant->appends(['sort' => $sort, 'valueSearch' => $valueSearch, 'valueSort' => $valueSort, 'perPage' => $perPage]);
+            foreach ($result as $rQuery) {
+                if ($rQuery['mAssistantPicture'] == null) {
+                    continue;
+                }
+                $rQuery['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $rQuery['mAssistantPicture']['picture_filename']);
+            }
+            return $result;
+        }
+
+        $result = $dataAssistant->latest()->paginate(10)->appends(['sort' => $sort, 'valueSearch' => $valueSearch, 'valueSort' => $valueSort, 'perPage' => $perPage]);
+        foreach ($result as $rQuery) {
+            if ($rQuery['mAssistantPicture'] == null) {
+                continue;
+            }
+            $rQuery['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $rQuery['mAssistantPicture']['picture_filename']);
+        }
+        return $result;
+    }
+
+    public function getAssistantAdmin($valueSearch, $valueSort, $sort, $perPage)
+    {
+        $dataAssistant = MAssistant::with([
+            'mAssistantPicture' => function ($assistantPicture) {
+                $assistantPicture->select(
+                    'picture_id',
+                    'assistant_id',
+                    'picture_filename',
+                    'picture_path'
+                );
+            },
+            'emailUser' => function ($emailUser) {
+                $emailUser->select(
+                    'user_id',
+                    'email'
+                );
+            },
+        ])->select(
+            'assistant_id',
+            'user_id',
+            'assistant_fullname',
+            'assistant_salary',
+            'assistant_telp',
+            'assistant_isactive'
+        )->where(function ($query) use ($valueSearch) {
+            $query->where(
+                'assistant_fullname',
+                'LIKE',
+                '%' . $valueSearch . '%'
+            )->orWhere(
+                'assistant_salary',
+                'LIKE',
+                '%' . $valueSearch . '%'
+            )->orWhere(
+                'assistant_telp',
                 'LIKE',
                 '%' . $valueSearch . '%'
             );
