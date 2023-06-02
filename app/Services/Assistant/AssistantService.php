@@ -167,7 +167,7 @@ class AssistantService
             throw new NotFoundException('Data Assistant Tidak Ada');
         }
 
-        if ($dataAssistant['mCustomerPicture'] != null) {
+        if ($dataAssistant['mAssistantPicture'] != null) {
             $dataAssistant['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $dataAssistant['mAssistantPicture']['picture_filename']);
         }
 

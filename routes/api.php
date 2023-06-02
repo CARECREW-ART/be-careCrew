@@ -40,8 +40,12 @@ Route::controller(CustomerController::class)->group(function () {
     });
 });
 
-Route::controller(OrderController::class)->group(function () {
-    Route::post('/orders', 'order');
+Route::prefix('orders')->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::controller(OrderController::class)->group(function () {
+            Route::post('/orders', 'order');
+        });
+    });
 });
 
 Route::prefix('admin')->group(function () {
