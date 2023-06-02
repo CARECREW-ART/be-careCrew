@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use App\Models\Customer\MCustomer;
 use App\Models\Customer\MCustomerAddress;
 use App\Models\Customer\MCustormerPicture;
+use App\Services\Customer\CustomerService;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\File;
@@ -28,9 +29,10 @@ class CustomerController extends Controller
      * Class constructor.
      */
 
-    public function __construct(private UserService $userService)
+    public function __construct(private UserService $userService, private CustomerService $customerService)
     {
         $this->userService = $userService;
+        $this->customerService = $customerService;
     }
 
     public function createCustomer(CustomerPostRequest $req)
@@ -106,56 +108,7 @@ class CustomerController extends Controller
     {
         $userId = auth('sanctum')->user()->user_id;
 
-        $dataCustomer = MCustomer::where('user_id', $userId)->with([
-            'customerGender' => function ($customerGender) {
-                $customerGender->select(
-                    'gender_bit',
-                    'gender_value'
-                );
-            },
-            'mCustomerPicture' => function ($customerPicture) {
-                $customerPicture->select(
-                    'picture_id',
-                    'customer_id',
-                    'picture_filename',
-                    'picture_path'
-                );
-            },
-            'mCustomerAddress' => function ($customerAddress) {
-                $customerAddress->select(
-                    'address_id',
-                    'customer_id',
-                    'province_id',
-                    'city_id',
-                    'district_id',
-                    'village_id',
-                    'postalzip_id',
-                    'address_street',
-                    'address_other'
-                );
-            },
-            'emailUser' => function ($email) {
-                $email->select(
-                    'user_id',
-                    'email'
-                );
-            },
-        ])->select(
-            'customer_id',
-            'user_id',
-            'customer_fullname',
-            'customer_nickname',
-            'customer_username',
-            'customer_telp',
-            'customer_gender',
-            'customer_birthdate',
-        )->first();
-
-        $dataCustomer['mCustomerPicture']['picture_path'] = Storage::url("/photocustomer/" . $dataCustomer['mCustomerPicture']['picture_filename']);
-
-        if ($dataCustomer == null) {
-            throw new NotFoundException('Data Customer Tidak Ada');
-        }
+        $dataCustomer = $this->customerService->getCustomerByUserId($userId);
 
         return response()->json(['data' => $dataCustomer], 200);
     }
@@ -246,7 +199,7 @@ class CustomerController extends Controller
     {
         $userId = auth('sanctum')->user()->user_id;
 
-        $dataCustomer = Mcustomer::where('user_id', $userId)->with([
+        $dataCustomer = MCustomer::where('user_id', $userId)->with([
             'mCustomerAddress' => function ($customerAddress) {
                 $customerAddress->select(
                     'address_id',

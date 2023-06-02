@@ -142,4 +142,56 @@ class CustomerService
 
         return $dataCustomer;
     }
+
+    public function getCustomerAddressDetail($userId)
+    {
+        $dataCustomer = MCustomer::where('user_id', $userId)->with([
+            'mCustomerAddress' => function ($customerAddress) {
+                $customerAddress->with([
+                    'mCustomerProvince' => function ($customerProvince) {
+                        $customerProvince->select(
+                            'province_id',
+                            'province_name'
+                        );
+                    },
+                    'mCustomerCity' => function ($customerCity) {
+                        $customerCity->select(
+                            'city_id',
+                            'city_name'
+                        );
+                    },
+                    'mCustomerDistrict' => function ($customerDistrict) {
+                        $customerDistrict->select(
+                            'district_id',
+                            'district_name'
+                        );
+                    },
+                    'mCustomerVillage' => function ($customerVillage) {
+                        $customerVillage->select(
+                            'village_id',
+                            'village_name'
+                        );
+                    },
+                    'mCustomerPostalZip' => function ($customerPostalzip) {
+                        $customerPostalzip->select(
+                            'postalzip_id',
+                            'postalzip_name'
+                        );
+                    }
+                ])->select(
+                    'address_id',
+                    'customer_id',
+                    'province_id',
+                    'city_id',
+                    'district_id',
+                    'village_id',
+                    'postalzip_id',
+                    'address_street',
+                    'address_other'
+                );
+            },
+        ])->first('customer_id');
+
+        return $dataCustomer;
+    }
 }
