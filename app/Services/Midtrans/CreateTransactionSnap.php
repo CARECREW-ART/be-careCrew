@@ -37,18 +37,26 @@ class CreateTransactionSnap extends Midtrans
             $lastName = " ";
         }
 
-        $params = array(
-            'transaction_details' => array(
+        $params = [
+            'transaction_details' => [
                 'order_id' => $this->orderId,
                 'gross_amount' => $this->totalPrice,
-            ),
-            'customer_details' => array(
+            ],
+            'customer_details' => [
                 'first_name' => $firstName,
                 'last_name' => $lastName,
                 'email' => $this->customerEmail,
                 'phone' => $this->customerPhone,
-            ),
-        );
+            ],
+            "enabled_payments" => [
+                "shopeepay",
+                "bca_va"
+            ],
+            "expiry" => [
+                "unit" => "hours",
+                "duration" => 1
+            ],
+        ];
 
         $paymentUrl = Snap::createTransaction($params);
 

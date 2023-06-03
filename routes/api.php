@@ -41,9 +41,12 @@ Route::controller(CustomerController::class)->group(function () {
 });
 
 Route::prefix('orders')->group(function () {
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::controller(OrderController::class)->group(function () {
+        Route::post('midtrans-notification', 'orderNotification');
+    });
+    Route::middleware(['auth:sanctum', 'CustomerRole'])->group(function () {
         Route::controller(OrderController::class)->group(function () {
-            Route::post('/orders', 'order');
+            Route::post('/orders', 'createOrder');
             Route::get('/confirm', 'confirmOrder');
         });
     });
@@ -91,10 +94,4 @@ Route::prefix('master')->group(function () {
         Route::get('/postalzip', 'getPostalZipByVillageId');
         Route::get('/gender', 'getGender');
     });
-});
-
-
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
 });

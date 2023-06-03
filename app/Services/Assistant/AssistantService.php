@@ -104,6 +104,37 @@ class AssistantService
         }
     }
 
+    public function getAssistantIsActive($assistantId)
+    {
+        $dataAssistant = MAssistant::where('assistant_id', $assistantId)->first();
+
+        if ($dataAssistant == null) {
+            throw new NotFoundException('Data Assistant Tidak Ada');
+        }
+
+        return $dataAssistant->assistant_isactive;
+    }
+
+    public function putAssistantIsActive($assistantId, $value)
+    {
+        $dataAssistant = MAssistant::where('assistant_id', $assistantId)->first();
+
+        if ($dataAssistant == null) {
+            throw new NotFoundException('Data Assistant Tidak Ada');
+        }
+
+        try {
+            DB::beginTransaction();
+            $dataAssistant = MAssistant::where('assistant_id', $assistantId);
+            $dataAssistant->update(['assistant_isactive' => $value]);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            throw new Exception($e->getMessage());
+        }
+    }
+
     public function getAssistantByUserId($userId)
     {
         $dataAssistant = MAssistant::where('user_id', $userId)->with([

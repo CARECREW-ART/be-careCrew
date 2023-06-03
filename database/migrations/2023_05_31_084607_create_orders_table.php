@@ -15,11 +15,13 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('order_id', 20)->unique();
+            $table->string('invoice_id', 20)->unique();
             $table->foreignIdFor(MAssistant::class, 'assistant_id')->constrained('m_assistants', 'assistant_id');
             $table->foreignIdFor(MCustomer::class, 'customer_id')->constrained('m_customers', 'customer_id');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->decimal('total_price', 12, 2);
-            $table->enum('payment_status', ['On Going', 'Waiting For Payment', 'Success', 'Expired']);
+            $table->enum('payment_status', ['Created', 'Waiting For Payment', 'Success', 'Expired', 'Canceled']);
             $table->string('snap_token')->nullable();
             $table->timestamps();
         });
