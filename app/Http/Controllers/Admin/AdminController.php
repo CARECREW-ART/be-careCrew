@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Services\Assistant\AssistantService;
 use App\Services\Customer\CustomerService;
+use App\Services\Order\OrderService;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -12,10 +13,11 @@ class AdminController extends Controller
     /**
      * Class constructor.
      */
-    public function __construct(private AssistantService $assistantService, private CustomerService $customerService)
+    public function __construct(private AssistantService $assistantService, private CustomerService $customerService, private OrderService $orderService)
     {
         $this->assistantService = $assistantService;
         $this->customerService = $customerService;
+        $this->orderService = $orderService;
     }
 
     public function getAssistant(Request $req)
@@ -42,6 +44,13 @@ class AdminController extends Controller
     public function getCustomerDetail($userId)
     {
         $data = $this->customerService->getCustomerByUserId($userId);
+
+        return response()->json($data, 200);
+    }
+
+    public function getOrder(Request $req)
+    {
+        $data = $this->orderService->getOrderAdmin($req['valueSearch'], $req['valueSort'], $req['sort'], $req['perPage']);
 
         return response()->json($data, 200);
     }

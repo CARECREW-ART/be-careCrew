@@ -8,6 +8,7 @@ use App\Services\Assistant\AssistantService;
 use App\Services\Midtrans\CreateTransactionSnap;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class OrderService
@@ -83,6 +84,22 @@ class OrderService
         }
     }
 
+    public function changePaymentType($orderId, $value)
+    {
+        try {
+            DB::beginTransaction();
+
+            $dataOrder = Order::where("invoice_id", $orderId);
+            $dataOrder->update(['payment_type' => $value]);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            throw new Exception($e->getMessage());
+        }
+    }
+
     public function getOrderDetail($orderId)
     {
         $dataOrder = Order::where('invoice_id', $orderId)->with([
@@ -91,5 +108,76 @@ class OrderService
         ])->first();
 
         return $dataOrder;
+    }
+
+    public function getOrderAdmin($valueSearch, $valueSort, $sort, $perPage)
+    {
+        $dataOrder = Order::with([
+            'mAssistant' => function ($mAssistant) {
+                $mAssistant->with([
+                    'mAssistantPicture' => function ($assistantPicture) {
+                        $assistantPicture->select(
+                            'picture_id',
+                            'assistant_id',
+                            'picture_filename',
+                            'picture_path'
+                        );
+                    },
+                ])->select(
+                    'assistant_id',
+                    'assistant_fullname',
+                    'assistant_nickname',
+                );
+            },
+        ])->select(
+            'id',
+            'invoice_id',
+            'assistant_id',
+            'payment_status',
+            'payment_type'
+        )->where(function ($query) use ($valueSearch) {
+            $query->where(
+                'invoice_id',
+                'LIKE',
+                '%' . $valueSearch . '%'
+            )->orWhere(
+                'payment_status',
+                'LIKE',
+                '%' . $valueSearch . '%'
+            )->orWhere(
+                'payment_type',
+                'LIKE',
+                '%' . $valueSearch . '%'
+            );
+            return $query;
+        });
+
+        if (isset($valueSort) && isset($valueSort)) {
+            $dataOrder = $dataOrder->orderBy($valueSort, $sort);
+        }
+
+        if (isset($perPage)) {
+            $dataOrder = $dataOrder->latest()->paginate($perPage);
+        }
+
+        if ($perPage !== null) {
+            $result = $dataOrder->appends(['sort' => $sort, 'valueSearch' => $valueSearch, 'valueSort' => $valueSort, 'perPage' => $perPage]);
+            foreach ($result as $rQuery) {
+                if ($rQuery['mAssistant']['mAssistantPicture'] == null) {
+                    continue;
+                }
+                $rQuery['mAssistant']['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $rQuery['mAssistant']['mAssistantPicture']['picture_filename']);
+            }
+            return $result;
+        }
+
+        $result = $dataOrder->latest()->paginate(10)->appends(['sort' => $sort, 'valueSearch' => $valueSearch, 'valueSort' => $valueSort, 'perPage' => $perPage]);
+        foreach ($result as $rQuery) {
+            if ($rQuery['mAssistant']['mAssistantPicture'] == null) {
+                continue;
+            }
+            $rQuery['mAssistant']['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $rQuery['mAssistant']['mAssistantPicture']['picture_filename']);
+        }
+        return $result;
     }
 }

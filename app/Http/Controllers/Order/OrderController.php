@@ -89,24 +89,29 @@ class OrderController extends Controller
 
         if ($callback->isSignatureKeyVerified()) {
             $order = $callback->getOrder();
+            $notification = $callback->getNotification();
 
             if ($callback->isSuccess()) {
 
                 $this->orderService->changePaymentStatus($order->invoice_id, "Success");
+                $this->orderService->changePaymentType($order->invoice_id, $notification->payment_type);
             }
 
             if ($callback->isPending()) {
 
                 $this->orderService->changePaymentStatus($order->invoice_id, "Waiting For Payment");
+                $this->orderService->changePaymentType($order->invoice_id, $notification->payment_type);
             }
 
             if ($callback->isExpire()) {
                 $this->orderService->changePaymentStatus($order->invoice_id, "Expired");
+                $this->orderService->changePaymentType($order->invoice_id, $notification->payment_type);
                 $this->assistantService->putAssistantIsActive($order->assistant_id, 1);
             }
 
             if ($callback->isCancelled()) {
                 $this->orderService->changePaymentStatus($order->invoice_id, "Canceled");
+                $this->orderService->changePaymentType($order->invoice_id, $notification->payment_type);
                 $this->assistantService->putAssistantIsActive($order->assistant_id, 1);
             }
 

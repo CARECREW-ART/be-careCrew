@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('end_date');
             $table->decimal('total_price', 12, 2);
             $table->enum('payment_status', ['Created', 'Waiting For Payment', 'Success', 'Expired', 'Canceled']);
+            $table->string('payment_type', 30)->nullable();
             $table->string('snap_token')->nullable();
             $table->timestamps();
         });

@@ -60,6 +60,7 @@ Route::prefix('admin')->group(function () {
                 Route::get('/assistant/{userId}', 'getAssistantDetail');
                 Route::get('customer', 'getCustomer');
                 Route::get('/customer/{userId}', 'getCustomerDetail');
+                Route::get('/order', 'getOrder');
             });
         });
     });
