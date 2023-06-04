@@ -46,7 +46,7 @@ Route::prefix('orders')->group(function () {
     });
     Route::middleware(['auth:sanctum', 'CustomerRole'])->group(function () {
         Route::controller(OrderController::class)->group(function () {
-            Route::post('/orders', 'createOrder');
+            Route::post('/checkout', 'createOrder');
             Route::get('/confirm', 'confirmOrder');
         });
     });
