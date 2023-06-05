@@ -194,4 +194,82 @@ class CustomerService
 
         return $dataCustomer;
     }
+
+    public function getCustomerAndAddressByUserId($userId)
+    {
+        $dataCustomer = MCustomer::where('user_id', $userId)->with([
+            'mCustomerPicture' => function ($CustomerPicture) {
+                $CustomerPicture->select(
+                    'picture_id',
+                    'customer_id',
+                    'picture_filename',
+                    'picture_path'
+                );
+            },
+            'mCustomerAddress' => function ($CustomerAddress) {
+                $CustomerAddress->with([
+                    'mCustomerProvince' => function ($customerProvince) {
+                        $customerProvince->select(
+                            'province_id',
+                            'province_name'
+                        );
+                    },
+                    'mCustomerCity' => function ($customerCity) {
+                        $customerCity->select(
+                            'city_id',
+                            'city_name'
+                        );
+                    },
+                    'mCustomerDistrict' => function ($customerDistrict) {
+                        $customerDistrict->select(
+                            'district_id',
+                            'district_name'
+                        );
+                    },
+                    'mCustomerVillage' => function ($customerVillage) {
+                        $customerVillage->select(
+                            'village_id',
+                            'village_name'
+                        );
+                    },
+                    'mCustomerPostalZip' => function ($customerPostalzip) {
+                        $customerPostalzip->select(
+                            'postalzip_id',
+                            'postalzip_name'
+                        );
+                    }
+                ])->select(
+                    'address_id',
+                    'customer_id',
+                    'province_id',
+                    'city_id',
+                    'district_id',
+                    'village_id',
+                    'postalzip_id',
+                    'address_street',
+                    'address_other'
+                );
+            },
+        ])->select(
+            'customer_id',
+            'user_id',
+            'customer_fullname',
+            'customer_nickname',
+            'customer_telp',
+            'customer_gender',
+        )->first();
+
+        if ($dataCustomer == null) {
+            throw new NotFoundException('Data Customer Tidak Ada');
+        }
+
+        if ($dataCustomer['mCustomerPicture'] != null) {
+            $dataCustomer['mCustomerPicture']['picture_path'] = Storage::url("/photoCustomer/" . $dataCustomer['mCustomerPicture']['picture_filename']);
+        }
+
+        $dataCustomer['m_customer_picture'] = null;
+
+
+        return $dataCustomer;
+    }
 }

@@ -53,8 +53,8 @@ class CreateTransactionSnap extends Midtrans
                 "bca_va"
             ],
             "expiry" => [
-                "unit" => "hours",
-                "duration" => 1
+                "unit" => "minutes",
+                "duration" => 30
             ],
         ];
 

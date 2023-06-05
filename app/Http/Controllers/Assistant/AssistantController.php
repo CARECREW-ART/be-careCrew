@@ -11,6 +11,7 @@ use App\Http\Requests\Assistant\AssistantPostRequest;
 use App\Http\Requests\Assistant\AssistantPutRequest;
 use App\Http\Requests\User\UserPasswordPutRequest as PasswordChange;
 use App\Services\Assistant\AssistantService;
+use App\Services\Order\OrderService;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
 
@@ -20,7 +21,7 @@ class AssistantController extends Controller
      * Class constructor.
      */
 
-    public function __construct(private AssistantService $assistantService, private UserService $userService)
+    public function __construct(private AssistantService $assistantService, private UserService $userService, private OrderService $orderService)
     {
         $this->assistantService = $assistantService;
         $this->userService = $userService;

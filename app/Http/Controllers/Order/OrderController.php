@@ -95,6 +95,7 @@ class OrderController extends Controller
 
                 $this->orderService->changePaymentStatus($order->invoice_id, "Success");
                 $this->orderService->changePaymentType($order->invoice_id, $notification->payment_type);
+                $this->orderService->changeBitActive($order->invoice_id, true);
             }
 
             if ($callback->isPending()) {
@@ -129,10 +130,48 @@ class OrderController extends Controller
         }
     }
 
-    public function getDetailOrder(Request $req)
+    public function getDetailOrderAdmin(Request $req)
     {
         $data = $this->orderService->getOrderDetail($req['order_id']);
 
         return response()->json(['data' => $data], 200);
+    }
+
+    public function getDetailOrder()
+    {
+    }
+
+    public function getAllOrderByUserId()
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        $data = $this->orderService->getAllOrderByUserId($userId);
+
+        return response()->json(['data' => $data]);
+    }
+
+    public function assistantActiveOrder()
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        $data = $this->orderService->assistantActiveOrder($userId);
+
+        return response()->json(['data' => $data]);
+    }
+
+    public function assistantHistoryOrder()
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        $data = $this->orderService->assistantHistoryOrder($userId);
+
+        return response()->json(['data' => $data]);
+    }
+
+    public function assistantActiveOrderDetail(Request $req)
+    {
+        $data = $this->orderService->assistantActiveOrderDetail($req->only('user_id'));
+
+        return response()->json(['data' => $data]);
     }
 }

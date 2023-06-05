@@ -40,17 +40,18 @@ Route::controller(CustomerController::class)->group(function () {
     });
 });
 
-Route::prefix('orders')->group(function () {
-    Route::controller(OrderController::class)->group(function () {
-        Route::post('midtrans-notification', 'orderNotification');
-    });
+Route::controller(OrderController::class)->group(function () {
+    Route::post('/order/midtrans-notification', 'orderNotification');
+    Route::get('order/assistant', 'assistantActiveOrder')->middleware(['auth:sanctum', 'AssistantRole']);
+    Route::get('order/assistant/history', 'assistantHistoryOrder')->middleware(['auth:sanctum', 'AssistantRole']);
+    Route::get('order/customer', 'assistantActiveOrderDetail')->middleware(['auth:sanctum', 'AssistantRole']);
     Route::middleware(['auth:sanctum', 'CustomerRole'])->group(function () {
-        Route::controller(OrderController::class)->group(function () {
-            Route::post('/checkout', 'createOrder');
-            Route::get('/confirm', 'confirmOrder');
-        });
+        Route::post('/order/checkout', 'createOrder');
+        Route::get('/order/confirm', 'confirmOrder');
+        Route::get('/order', 'getAllOrderByUserId');
     });
 });
+
 
 Route::prefix('admin')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
@@ -60,7 +61,7 @@ Route::prefix('admin')->group(function () {
                 Route::get('/assistant/{userId}', 'getAssistantDetail');
                 Route::get('customer', 'getCustomer');
                 Route::get('/customer/{userId}', 'getCustomerDetail');
-                Route::get('/order', 'getOrder');
+                Route::get('/order', 'getDetailOrderAdmin');
             });
         });
     });

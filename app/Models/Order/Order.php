@@ -20,7 +20,8 @@ class Order extends Model
         'snap_token',
         'start_date',
         'end_date',
-        'payment_type'
+        'payment_type',
+        'bit_active'
     ];
 
     protected $primaryKey = 'id';

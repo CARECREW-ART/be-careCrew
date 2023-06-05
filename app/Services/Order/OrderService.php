@@ -3,8 +3,10 @@
 namespace App\Services\Order;
 
 use App\Exceptions\CustomInvariantException;
+use App\Exceptions\NotFoundException;
 use App\Models\Order\Order;
 use App\Services\Assistant\AssistantService;
+use App\Services\Customer\CustomerService;
 use App\Services\Midtrans\CreateTransactionSnap;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -16,9 +18,10 @@ class OrderService
     /**
      * Class constructor.
      */
-    public function __construct(private AssistantService $assistantService)
+    public function __construct(private AssistantService $assistantService, private CustomerService $customerService)
     {
         $this->assistantService = $assistantService;
+        $this->customerService = $customerService;
     }
 
     public function createOrder($payload)
@@ -91,6 +94,22 @@ class OrderService
 
             $dataOrder = Order::where("invoice_id", $orderId);
             $dataOrder->update(['payment_type' => $value]);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    public function changeBitActive($orderId, $value)
+    {
+        try {
+            DB::beginTransaction();
+
+            $dataOrder = Order::where("invoice_id", $orderId);
+            $dataOrder->update(['bit_active' => $value]);
 
             DB::commit();
         } catch (Exception $e) {
@@ -179,5 +198,121 @@ class OrderService
             $rQuery['mAssistant']['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $rQuery['mAssistant']['mAssistantPicture']['picture_filename']);
         }
         return $result;
+    }
+
+    public function getAllOrderByUserId($userId)
+    {
+        $dataCustomer = $this->customerService->getCustomerByUserId($userId);
+
+        $dataOrder = Order::where('customer_id', $dataCustomer->customer_id)->with([
+            'mAssistant' => function ($mAssistant) {
+                $mAssistant->with([
+                    'mAssistantPicture' => function ($assistantPicture) {
+                        $assistantPicture->select(
+                            'picture_id',
+                            'assistant_id',
+                            'picture_filename',
+                            'picture_path'
+                        );
+                    },
+                ])->select(
+                    'assistant_id',
+                    'assistant_fullname',
+                    'assistant_nickname',
+                    'assistant_username'
+                );
+            },
+        ])->select(
+            'id',
+            'invoice_id',
+            'assistant_id',
+            'payment_status',
+            'total_price',
+            'snap_token'
+        )->get();
+
+        foreach ($dataOrder as $rQuery) {
+            if ($rQuery['mAssistant']['mAssistantPicture'] == null) {
+                continue;
+            }
+            $rQuery['mAssistant']['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $rQuery['mAssistant']['mAssistantPicture']['picture_filename']);
+        }
+
+        return $dataOrder;
+    }
+
+    public function assistantActiveOrder($userId)
+    {
+        $dataAssistant = $this->assistantService->getAssistantByUserId($userId);
+
+        $dataOrder = Order::where('assistant_id', $dataAssistant->assistant_id)->with([
+            'mCustomer' => function ($mCustomer) {
+                $mCustomer->with([
+                    'mCustomerPicture' => function ($CustomerPicture) {
+                        $CustomerPicture->select(
+                            'picture_id',
+                            'customer_id',
+                            'picture_filename',
+                            'picture_path'
+                        );
+                    },
+                ])->select(
+                    'customer_id',
+                    'user_id',
+                    'customer_fullname',
+                    'customer_nickname',
+                );
+            },
+        ])->where('end_date', '>', date('Y-m-d'))->where('bit_active', true)->select(
+            'id',
+            'assistant_id',
+            'customer_id',
+            'start_date',
+            'end_date'
+        )->first();
+
+        return $dataOrder;
+    }
+
+    public function assistantHistoryOrder($userId)
+    {
+        $dataAssistant = $this->assistantService->getAssistantByUserId($userId);
+
+        $dataOrder = Order::where('assistant_id', $dataAssistant->assistant_id)->with([
+            'mCustomer' => function ($mCustomer) {
+                $mCustomer->with([
+                    'mCustomerPicture' => function ($CustomerPicture) {
+                        $CustomerPicture->select(
+                            'picture_id',
+                            'customer_id',
+                            'picture_filename',
+                            'picture_path'
+                        );
+                    },
+                ])->select(
+                    'customer_id',
+                    'user_id',
+                    'customer_fullname',
+                    'customer_nickname',
+                );
+            },
+        ])->where('payment_status', 'Success')->where('bit_active', false)->select(
+            'id',
+            'assistant_id',
+            'customer_id',
+            'start_date',
+            'end_date'
+        )->get();
+
+        if (!count($dataOrder)) {
+            throw new NotFoundException('data riwayat pekerjaan tidak ada');
+        }
+
+        return $dataOrder;
+    }
+
+    public function assistantActiveOrderDetail($userId)
+    {
+        return $this->customerService->getCustomerAndAddressByUserId($userId);
     }
 }
