@@ -228,7 +228,8 @@ class OrderService
             'assistant_id',
             'payment_status',
             'total_price',
-            'snap_token'
+            'snap_token',
+            'created_at'
         )->get();
 
         foreach ($dataOrder as $rQuery) {
