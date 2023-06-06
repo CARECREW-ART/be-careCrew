@@ -48,7 +48,7 @@ class AdminController extends Controller
         return response()->json($data, 200);
     }
 
-    public function getDetailOrderAdmin(Request $req)
+    public function getAllOrderAdmin(Request $req)
     {
         $data = $this->orderService->getOrderAdmin($req['valueSearch'], $req['valueSort'], $req['sort'], $req['perPage']);
 
