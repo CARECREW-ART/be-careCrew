@@ -45,6 +45,7 @@ Route::controller(OrderController::class)->group(function () {
     Route::get('order/assistant', 'assistantActiveOrder')->middleware(['auth:sanctum', 'AssistantRole']);
     Route::get('order/assistant/history', 'assistantHistoryOrder')->middleware(['auth:sanctum', 'AssistantRole']);
     Route::get('order/customer', 'assistantActiveOrderDetail')->middleware(['auth:sanctum', 'AssistantRole']);
+    Route::put('order/assistant/job-done', 'changeStatusAssistantOrder')->middleware(['auth:sanctum', 'AssistantRole']);
     Route::middleware(['auth:sanctum', 'CustomerRole'])->group(function () {
         Route::post('/order/checkout', 'createOrder');
         Route::get('/order/confirm', 'confirmOrder');

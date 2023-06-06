@@ -45,7 +45,7 @@ class OrderController extends Controller
                 ],
                 'midtrans' => $paymentUrl
             ]
-        ]);
+        ], 201);
     }
 
     public function confirmOrder(Request $req)
@@ -173,5 +173,14 @@ class OrderController extends Controller
         $data = $this->orderService->assistantActiveOrderDetail($req->only('user_id'));
 
         return response()->json(['data' => $data]);
+    }
+
+    public function changeStatusAssistantOrder(Request $req)
+    {
+        $userId = auth('sanctum')->user()->user_id;
+
+        $this->orderService->changeStatusAssistantOrder($userId, $req->only('order_id'));
+
+        return response()->json(['message' => 'Pekerjaan Selesai'], 200);
     }
 }

@@ -606,4 +606,19 @@ class AssistantService
             throw new Exception($e->getMessage());
         }
     }
+
+    public function putAssistantBitActive($assistantId, $value)
+    {
+        try {
+            DB::beginTransaction();
+            $dataAssistant = MAssistant::where('assistant_id', $assistantId);
+
+            $dataAssistant->update(['assistant_isactive' => $value]);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            throw new Exception($e->getMessage());
+        }
+    }
 }

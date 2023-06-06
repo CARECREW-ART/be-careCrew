@@ -315,4 +315,24 @@ class OrderService
     {
         return $this->customerService->getCustomerAndAddressByUserId($userId);
     }
+
+    public function changeStatusAssistantOrder($userId, $orderId)
+    {
+        $dataAssistant = $this->assistantService->getAssistantByUserId($userId);
+
+        try {
+            DB::beginTransaction();
+
+            $dataOrder = Order::where("id", $orderId)->where('assistant_id', $dataAssistant->assistant_id);
+            $dataOrder->update(['bit_active' => false]);
+
+            $this->assistantService->putAssistantBitActive($dataAssistant->assistant_id, true);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            throw new Exception($e->getMessage());
+        }
+    }
 }
