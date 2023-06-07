@@ -7,8 +7,9 @@ use App\Services\Assistant\AssistantService;
 use App\Services\Customer\CustomerService;
 use App\Services\Midtrans\CallbackService;
 use App\Services\Order\OrderService;
+use DateTime;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Date;
 
 class OrderController extends Controller
 {
@@ -152,11 +153,14 @@ class OrderController extends Controller
 
     public function assistantActiveOrder()
     {
+        $dateTime = new DateTime();
         $userId = auth('sanctum')->user()->user_id;
 
         $data = $this->orderService->assistantActiveOrder($userId);
 
-        return response()->json(['data' => $data]);
+        return response()->json([
+            'data' => $data
+        ]);
     }
 
     public function assistantHistoryOrder()
@@ -172,7 +176,9 @@ class OrderController extends Controller
     {
         $data = $this->orderService->assistantActiveOrderDetail($req->only('user_id'));
 
-        return response()->json(['data' => $data]);
+        return response()->json([
+            'data' => $data
+        ]);
     }
 
     public function changeStatusAssistantOrder(Request $req)

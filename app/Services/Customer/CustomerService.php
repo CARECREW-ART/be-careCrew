@@ -267,7 +267,7 @@ class CustomerService
             $dataCustomer['mCustomerPicture']['picture_path'] = Storage::url("/photoCustomer/" . $dataCustomer['mCustomerPicture']['picture_filename']);
         }
 
-        $dataCustomer['m_customer_picture'] = null;
+        $dataCustomer['mCustomerPicture'] = null;
 
 
         return $dataCustomer;

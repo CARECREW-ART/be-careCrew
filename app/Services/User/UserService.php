@@ -3,6 +3,7 @@
 namespace App\Services\User;
 
 use App\Exceptions\CustomInvariantException;
+use App\Exceptions\NotFoundException;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Error;
@@ -30,15 +31,19 @@ class UserService
         } catch (Exception $e) {
             DB::rollBack();
 
-            throw new Exception($e->getMessage(), 500);
+            throw new Exception($e->getMessage());
         }
     }
 
     public function verifyUserCredentials($email, $password)
     {
-        try {
-            $user = User::where('email', $email)->firstOrFail();
+        $user = User::where('email', $email)->first();
 
+        if ($user == null) {
+            throw new NotFoundException("Data User Tidak Ditemukan");
+        }
+
+        try {
             if (!strlen($user)) {
                 return [false, "Alamat Email Tidak Ditemukan"];
             }
@@ -57,9 +62,13 @@ class UserService
 
     public function verifyUserValidPassword($userId, $password)
     {
-        try {
-            $user = User::where('user_id', $userId)->first();
+        $user = User::where('user_id', $userId)->first();
 
+        if ($user == null) {
+            throw new NotFoundException("Data User Tidak Ditemukan");
+        }
+
+        try {
             $resultPassword = Hash::check($password, $user->password);
 
             if (!$resultPassword) {
@@ -77,6 +86,10 @@ class UserService
         $hashedPassword = Hash::make($newPassword, ['rounds' => 12]);
 
         $user = User::where('user_id', $userId)->first();
+
+        if ($user == null) {
+            throw new NotFoundException("Data User Tidak Ditemukan");
+        }
 
         $resultPassword = Hash::check($oldPassword, $user->password);
 
@@ -97,20 +110,4 @@ class UserService
             throw new Exception($e->getMessage(), 500);
         }
     }
-
-    // public function deleteUser($userId)
-    // {
-    //     try {
-    //         DB::beginTransaction();
-
-    //         $dataUser = User::findOrFail($userId);
-    //         $dataUser->delete();
-
-    //         DB::commit();
-    //     } catch (ModelNotFoundException $e) {
-    //         DB::rollBack();
-
-    //         throw new HttpException(404, 'User Id ' . $userId . ' not Found');
-    //     }
-    // }
 }
