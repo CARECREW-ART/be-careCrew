@@ -428,7 +428,11 @@ class AssistantService
 
         $dataAssistant['city_name'] = $dataCityAssistant->city_name;
 
-        $dataAssistant['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $dataAssistant['mAssistantPicture']['picture_filename']);
+        if ($dataAssistant['mAssistantPicture'] != null) {
+            $dataAssistant['mAssistantPicture']['picture_path'] = Storage::url("/photoAssistant/" . $dataAssistant['mAssistantPicture']['picture_filename']);
+        }
+
+        $dataAssistant['mAssistantPicture'] = null;
 
         return $dataAssistant;
     }

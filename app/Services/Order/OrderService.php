@@ -8,6 +8,7 @@ use App\Models\Order\Order;
 use App\Services\Assistant\AssistantService;
 use App\Services\Customer\CustomerService;
 use App\Services\Midtrans\CreateTransactionSnap;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Support\Facades\Storage;
@@ -244,6 +245,7 @@ class OrderService
 
     public function assistantActiveOrder($userId)
     {
+        $dateTime = new DateTime();
         $dataAssistant = $this->assistantService->getAssistantByUserId($userId);
 
         $dataOrder = Order::where('assistant_id', $dataAssistant->assistant_id)->with([
@@ -271,6 +273,18 @@ class OrderService
             'start_date',
             'end_date'
         )->first();
+
+        if ($dataOrder == null) {
+            throw new NotFoundException("data Pekerjaan tidak ada");
+        }
+
+        if ($dataOrder['mCustomer']['mCustomerPicture'] != null) {
+            $dataOrder['mCustomer']['mCustomerPicture']['picture_path'] = Storage::url("/photoAssistant/" . $dataOrder['mCustomer']['mCustomerPicture']['picture_filename']);
+        }
+
+        $dataOrder['mCustomer']['mCustomerPicture'] = null;
+
+        $dataOrder['server_time'] = $dateTime->getTimestamp();
 
         return $dataOrder;
     }
@@ -309,6 +323,14 @@ class OrderService
             throw new NotFoundException('data riwayat pekerjaan tidak ada');
         }
 
+        foreach ($dataOrder as $rQuery) {
+            if ($rQuery['mCustomer']['mCustomerPicture'] == null) {
+                continue;
+            }
+            $rQuery['mCustomer']['mCustomerPicture']['picture_path'] = Storage::url("/photoAssistant/" . $rQuery['mCustomer']['mCustomerPicture']['picture_filename']);
+        }
+
+
         return $dataOrder;
     }
 
@@ -320,6 +342,12 @@ class OrderService
     public function changeStatusAssistantOrder($userId, $orderId)
     {
         $dataAssistant = $this->assistantService->getAssistantByUserId($userId);
+
+        $dataOrderGet = Order::where("id", $orderId)->where('assistant_id', $dataAssistant->assistant_id)->first();
+
+        if ($dataOrderGet == null) {
+            throw new NotFoundException('Data Pekerjaan Tidak Ada');
+        }
 
         try {
             DB::beginTransaction();
