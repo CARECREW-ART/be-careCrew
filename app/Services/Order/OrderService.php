@@ -279,7 +279,7 @@ class OrderService
         }
 
         if ($dataOrder['mCustomer']['mCustomerPicture'] != null) {
-            $dataOrder['mCustomer']['mCustomerPicture']['picture_path'] = Storage::url("/photoAssistant/" . $dataOrder['mCustomer']['mCustomerPicture']['picture_filename']);
+            $dataOrder['mCustomer']['mCustomerPicture']['picture_path'] = Storage::url("/photocustomer/" . $dataOrder['mCustomer']['mCustomerPicture']['picture_filename']);
         }
 
         $dataOrder['mCustomer']['mCustomerPicture'] = null;
@@ -327,7 +327,7 @@ class OrderService
             if ($rQuery['mCustomer']['mCustomerPicture'] == null) {
                 continue;
             }
-            $rQuery['mCustomer']['mCustomerPicture']['picture_path'] = Storage::url("/photoAssistant/" . $rQuery['mCustomer']['mCustomerPicture']['picture_filename']);
+            $rQuery['mCustomer']['mCustomerPicture']['picture_path'] = Storage::url("/photocustomer/" . $rQuery['mCustomer']['mCustomerPicture']['picture_filename']);
         }
 
 
