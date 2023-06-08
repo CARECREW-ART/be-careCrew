@@ -77,7 +77,7 @@ class CustomerController extends Controller
             $photoNameExt = $profilePhoto->getClientOriginalName();
             $extention = $profilePhoto->extension();
             $file_name = (Str::random(16) . '.' . $extention);
-            $path = $profilePhoto->move('storage/photocustomer', $file_name);
+            $path = $profilePhoto->move('./storage/photocustomer', $file_name);
 
             MCustormerPicture::create([
                 'customer_id' => $customerId->customer_id,
@@ -321,7 +321,7 @@ class CustomerController extends Controller
             $photoNameExt = $dataPhoto->getClientOriginalName();
             $extension = $dataPhoto->extension();
             $file_name = (Str::random(16) . '.' . $extension);
-            $path = $dataPhoto->move('storage/photocustomer', $file_name);
+            $path = $dataPhoto->move('./storage/photocustomer', $file_name);
 
             MCustormerPicture::create([
                 'customer_id' => $dataCustomer->customer_id,

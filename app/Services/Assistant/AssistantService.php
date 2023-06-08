@@ -81,7 +81,7 @@ class AssistantService
             $photoNameExt = $profilePhoto->getClientOriginalName();
             $extension = $profilePhoto->extension();
             $file_name = (Str::random(16) . '.' . $extension);
-            $path = $profilePhoto->move('storage/photoAssistant', $file_name);
+            $path = $profilePhoto->move('./storage/photoAssistant', $file_name);
 
             MAssistantPicture::create([
                 'assistant_id' => $assistantId,
@@ -550,7 +550,7 @@ class AssistantService
             $photoNameExt = $dataPhoto->getClientOriginalName();
             $extension = $dataPhoto->extension();
             $file_name = (Str::random(16) . '.' . $extension);
-            $path = $dataPhoto->move('storage/photoAssistant', $file_name);
+            $path = $dataPhoto->move('./storage/photoAssistant', $file_name);
 
             MAssistantPicture::create([
                 'assistant_id' => $dataAssistant->assistant_id,
