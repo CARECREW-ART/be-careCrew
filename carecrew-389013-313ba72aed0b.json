@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "carecrew-389013",
+  "private_key_id": "313ba72aed0b00c165af8f85675f98ac134d563b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQD14EYfuWqxMLX9\nIDcG5ivh1ee0qFpxU6xHuckEsnzKz0aahKL3CTXwBanul4wo0M47a3K2LvxgjDjt\nb7QCOQW5/ut02oaEtZAUnCVmgLbsDCmUTJPeNQF6ncBmSDLbNDMbbZcggbaWGIq/\ntBVQDeoZNGRc6Ibs1o0Bi0XCcn7myKCiMj0munpdvDJGnfIHQoQf3pblhyIsUQ7a\n8qPjdasm+edbqSSpsHHJlh+QjPCo99Z94EMDlL1P4tORQbk3/pBapKJn0XyVDt1k\nSzIX9V69aCLkRDaVnyd8/chzfaqP6B4868hGfiDAppMSeVSJNOmXi3b9FMNW6oqQ\nbRY75Y7nAgMBAAECggEAEEUaSXh1gkAc6su6QxnxXBem0MzgdJClh8wtbG17Ky3I\nGEAf9dowLYUnwi1ZDaJeOI8Fn4nrErXKATwxByygH7dUpqjchI+XIdCrUOXCNPXL\nvTp2q8TffNj6JZ/awv098doF9BVhRaazbQ1iPlKNY8Q/F+lzHtzw+7csPeUMV1ey\nGoDTZqTxOldzx+piNRT1rei+xhxP7yxBxZQ5BU4gqqWa58fFuZG0BEIaa4yizwXo\nWhW4Nf4c9mMCyLoysIjbo+/b8jlMch7UlgwFsFxYDcN5xfnWuNnS14K0hYTnV7CM\n70bmXL9czhvsv48n94jcTrQaK7ohuZrjRnzIvT/a0QKBgQD8h5FNPahU+U13P40t\nNXa0a56TRh09ylwHJPsoEzE7m0txwdIWAa5IPYyBGuxr9Sv1f2c/GqVjBbAuNmVg\nWMGKimnVfEtVY9VRYnBmaqXicfHz26Z5W5YhOBNSMIveyyjBWR4M40tVONTLXp90\nXK8q5Y7T2tCB0NLgYs/aAmljkwKBgQD5QUxo4KsLlCsm5VRBF70WVU1kxwTJxSh9\nO4kjVV/oHvf/7aoGlpGiIYmjUhErMPrJa9WPKZ1IKEalw5BjakO98d4q0Ig9G4s+\ngZAd3Zio/rWIPjNIqGRYPochNBo9n/8ytlHdpYbXzQo+CDuAnsIz1uqZxxCToetM\nv52EW+yj3QKBgQDBkzX5jKMFiBkuqOOSXSJCSSDEagGuRPlobJut65BYzcD2UYm2\nXtF3BN84dCf41XY9+MxvHgDbOBgGRKJPSZoKlfFsuZuRuDZj7V6V03iXbZr3wE8L\nRf5+NlrxLM97GCaEl8imPnGXwTm1LzJx4z5PVqq2kUw1xppvcK89wY2BywKBgQCl\ndxW0YcDqlNf4oDDIbWvXEZWpGv0wvLNeP1GQpTJfs39K5IkEipvvF3h5dRd0prU1\nVWKWATgqGKKdlC+b74U86P1lSr3GYyySuAvl559aQIxd/3yn9TF36zplbmMlGbud\n/K5oB2R2ieUMvQZTIhElvLxMjXuRpeHAN0vn++Yh+QKBgQCXDt8b2qEtMlKCKxrQ\nrcdMQr83BBPv1gB+dKGocD0BQdOFg1DJGtgVDorFmvirhWE3ugizBLljmbHCjG+H\n444eSRnGvImqwz+ADuZ07uJFU5n43CrDZHEB6y4CpOOihHDE4P/IY4vkwyGv7pii\nUrWYnqIHYQdFnxYvx5LnDD05Bw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "laravel-cloudstorage@carecrew-389013.iam.gserviceaccount.com",
+  "client_id": "101704270842074651223",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/laravel-cloudstorage%40carecrew-389013.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
