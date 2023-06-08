@@ -67,7 +67,7 @@ class CustomerService
                 if ($rQuery['mCustomerPicture'] == null) {
                     continue;
                 }
-                $rQuery['mCustomerPicture']['picture_path'] = Storage::url("/photoCustomer/" . $rQuery['mCustomerPicture']['picture_filename']);
+                $rQuery['mCustomerPicture']['picture_path'] = Storage::url("/photocustomer/" . $rQuery['mCustomerPicture']['picture_filename']);
             }
             return $result;
         }
@@ -77,7 +77,7 @@ class CustomerService
             if ($rQuery['mCustomerPicture'] == null) {
                 continue;
             }
-            $rQuery['mCustomerPicture']['picture_path'] = Storage::url("/photoCustomer/" . $rQuery['mCustomerPicture']['picture_filename']);
+            $rQuery['mCustomerPicture']['picture_path'] = Storage::url("/photocustomer/" . $rQuery['mCustomerPicture']['picture_filename']);
         }
         return $result;
     }
@@ -134,10 +134,10 @@ class CustomerService
         }
 
         if ($dataCustomer['mCustomerPicture'] != null) {
-            $dataCustomer['mCustomerPicture']['picture_path'] = Storage::url("/photoCustomer/" . $dataCustomer['mCustomerPicture']['picture_filename']);
+            $dataCustomer['mCustomerPicture']['picture_path'] = Storage::url("/photocustomer/" . $dataCustomer['mCustomerPicture']['picture_filename']);
         }
 
-        $dataCustomer['m_customer_picture'] = null;
+        $dataCustomer['mCustomerPicture'] = null;
 
 
         return $dataCustomer;
@@ -264,10 +264,10 @@ class CustomerService
         }
 
         if ($dataCustomer['mCustomerPicture'] != null) {
-            $dataCustomer['mCustomerPicture']['picture_path'] = Storage::url("/photoCustomer/" . $dataCustomer['mCustomerPicture']['picture_filename']);
+            $dataCustomer['mCustomerPicture']['picture_path'] = Storage::url("/photocustomer/" . $dataCustomer['mCustomerPicture']['picture_filename']);
         }
 
-        $dataCustomer['m_customer_picture'] = null;
+        $dataCustomer['mCustomerPicture'] = null;
 
 
         return $dataCustomer;
