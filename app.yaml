@@ -1,0 +1,53 @@
+service: be-carecrew
+runtime: php
+env: flex
+
+runtime_config: 
+    document_root: public
+
+# Ensure we skip ".env", which is only for local development
+skip_files: 
+    - .env
+
+automatic_scaling:
+    min_num_instances: 1
+    max_num_instances: 1
+
+resources:
+    cpu: 2
+    memory_gb: 4
+    disk_size_gb: 100
+
+env_variables:
+    # Put production environment variables here.
+    APP_NAME: Carecrew
+    APP_ENV: local
+    APP_KEY: "base64:cHGznd18Up99BOWM7d5iP0EbL9AHPeTT1kuuwTw8T9o:"
+    APP_DEBUG: true
+    APP_URL: https://be-carecrew.herokuapp.com
+
+    LOG_CHANNEL: stack
+    LOG_DEPRECATIONS_CHANNEL: null
+    LOG_LEVEL: debug
+
+    DB_CONNECTION: mysql
+    DB_HOST: 34.101.83.207
+    DB_PORT: 3306
+    DB_DATABASE: carecrew_dev
+    DB_USERNAME: root
+    DB_PASSWORD: Carcr3w-D4tab4s3
+
+    MIDTRANS_MERCHANT_ID: G234091110
+    MIDTRANS_CLIENT_KEY: SB-Mid-client-jgqcG0z7lUrvs3y2
+    MIDTRANS_SERVER_KEY: SB-Mid-server-ro2QoNZoQf7yzl9AuCcq_yI1
+
+    BROADCAST_DRIVER: log
+    CACHE_DRIVER: file
+    FILESYSTEM_DISK: public
+    QUEUE_CONNECTION: sync
+    SESSION_DRIVER: file
+    SESSION_LIFETIME: 120
+
+
+
+
