@@ -175,7 +175,7 @@ class CustomerService
                     'mCustomerPostalZip' => function ($customerPostalzip) {
                         $customerPostalzip->select(
                             'postalzip_id',
-                            'postalzip_name'
+                            'postalzip_value'
                         );
                     }
                 ])->select(
@@ -195,9 +195,9 @@ class CustomerService
         return $dataCustomer;
     }
 
-    public function getCustomerAndAddressByUserId($userId)
+    public function getCustomerAndAddressByUserId($customerId)
     {
-        $dataCustomer = MCustomer::where('user_id', $userId)->with([
+        $dataCustomer = MCustomer::where('customer_id', $customerId)->with([
             'mCustomerPicture' => function ($CustomerPicture) {
                 $CustomerPicture->select(
                     'picture_id',
@@ -235,7 +235,7 @@ class CustomerService
                     'mCustomerPostalZip' => function ($customerPostalzip) {
                         $customerPostalzip->select(
                             'postalzip_id',
-                            'postalzip_name'
+                            'postalzip_value'
                         );
                     }
                 ])->select(

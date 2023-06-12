@@ -174,7 +174,7 @@ class OrderController extends Controller
 
     public function assistantActiveOrderDetail(Request $req)
     {
-        $data = $this->orderService->assistantActiveOrderDetail($req->only('user_id'));
+        $data = $this->orderService->assistantActiveOrderDetail($req->only('customer_id'));
 
         return response()->json([
             'data' => $data

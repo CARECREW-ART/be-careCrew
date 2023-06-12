@@ -334,9 +334,9 @@ class OrderService
         return $dataOrder;
     }
 
-    public function assistantActiveOrderDetail($userId)
+    public function assistantActiveOrderDetail($customerId)
     {
-        return $this->customerService->getCustomerAndAddressByUserId($userId);
+        return $this->customerService->getCustomerAndAddressByUserId($customerId);
     }
 
     public function changeStatusAssistantOrder($userId, $orderId)
