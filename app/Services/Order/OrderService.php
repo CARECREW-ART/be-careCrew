@@ -376,7 +376,7 @@ class OrderService
         $dataOrder = Order::where('customer_id', $dataCustomer->customer_id)->where('snap_token', $token)->first();
 
         if ($dataOrder == null) {
-            throw new NotFoundException('Data Pekerjaan Tidak Ada');
+            throw new NotFoundException('Data Order Tidak Ada');
         }
 
         return $this->midtrans->cancelTransaction($dataOrder->invoice_id);
