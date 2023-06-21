@@ -57,7 +57,7 @@ class CreateTransactionSnap extends Midtrans
                 "id" => $this->assistantId,
                 "price" => $price,
                 "quantity" => 1,
-                "name" => "Midtrans Bear",
+                "name" => "Assistant" . $this->assistantFullname,
                 "brand" => "CareCrew",
                 "category" => $this->category,
                 "merchant_name" => "CareCrew"
