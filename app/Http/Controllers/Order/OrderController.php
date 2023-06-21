@@ -27,12 +27,14 @@ class OrderController extends Controller
     {
         [$dataOrder, $paymentUrl] = $this->orderService->createOrder($req->only([
             'assistant_id',
+            'assistant_fullname',
             'customer_id',
             'duration',
             'total_price',
             'customer_fullname',
             'customer_telp',
-            'customer_email'
+            'customer_email',
+            'category'
         ]));
 
         return response()->json([

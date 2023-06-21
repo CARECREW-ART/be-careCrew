@@ -34,6 +34,8 @@ class OrderService
         $customerTelp = $payload['customer_telp'];
         $duration = $payload['duration'];
         $totalPrice = $payload['total_price'];
+        $category = $payload['category'];
+        $assistantFullname = $payload['assistant_fullname'];
 
         $assistantIsActive = $this->assistantService->getAssistantIsActive($assistantId);
 
@@ -44,7 +46,7 @@ class OrderService
         $orderId = date("ymd") . 'AST' . strtoupper(Str::random(5));
         $startDate = date("Y-m-d");
         $endDate = date("Y-m-d", strtotime("+" . $duration .  "month"));
-        $midtrans = new CreateTransactionSnap($orderId, $totalPrice, $customerFullname, $customerEmail, $customerTelp);
+        $midtrans = new CreateTransactionSnap($orderId, $totalPrice, $customerFullname, $customerEmail, $customerTelp, $assistantId, $duration, $category, $assistantFullname);
         $paymentUrl = $midtrans->getSnapTransaction();
 
         try {
