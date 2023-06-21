@@ -50,6 +50,7 @@ Route::controller(OrderController::class)->group(function () {
         Route::post('/order/checkout', 'createOrder');
         Route::get('/order/confirm', 'confirmOrder');
         Route::get('/order', 'getAllOrderByUserId');
+        Route::post('/order/cancel', 'cancelOrder');
     });
 });
 

@@ -2,6 +2,7 @@
 
 namespace App\Services\Midtrans;
 
+use Midtrans\ApiRequestor;
 use Midtrans\Config;
 
 class Midtrans
@@ -27,5 +28,14 @@ class Midtrans
         Config::$isProduction = $this->isProduction;
         Config::$isSanitized = $this->isSanitized;
         Config::$is3ds = $this->is3ds;
+    }
+
+    public function cancelTransaction($id)
+    {
+        return ApiRequestor::post(
+            Config::getBaseUrl() . '/v2/' . $id . '/cancel',
+            Config::$serverKey,
+            false
+        );
     }
 }

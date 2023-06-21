@@ -8,6 +8,7 @@ use App\Models\Order\Order;
 use App\Services\Assistant\AssistantService;
 use App\Services\Customer\CustomerService;
 use App\Services\Midtrans\CreateTransactionSnap;
+use App\Services\Midtrans\Midtrans;
 use DateTime;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -19,10 +20,11 @@ class OrderService
     /**
      * Class constructor.
      */
-    public function __construct(private AssistantService $assistantService, private CustomerService $customerService)
+    public function __construct(private AssistantService $assistantService, private CustomerService $customerService, private Midtrans $midtrans)
     {
         $this->assistantService = $assistantService;
         $this->customerService = $customerService;
+        $this->midtrans = $midtrans;
     }
 
     public function createOrder($payload)
@@ -365,5 +367,18 @@ class OrderService
 
             throw new Exception($e->getMessage());
         }
+    }
+
+    public function cancelOrder($userId, $token)
+    {
+        $dataCustomer = $this->customerService->getCustomerByUserId($userId);
+
+        $dataOrder = Order::where('customer_id', $dataCustomer->customer_id)->where('snap_token', $token)->first();
+
+        if ($dataOrder == null) {
+            throw new NotFoundException('Data Pekerjaan Tidak Ada');
+        }
+
+        return $this->midtrans->cancelTransaction($dataOrder->invoice_id);
     }
 }

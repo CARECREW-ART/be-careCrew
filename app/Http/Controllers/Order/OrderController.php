@@ -51,6 +51,14 @@ class OrderController extends Controller
         ], 201);
     }
 
+    public function cancelOrder(Request $req)
+    {
+        $userId = auth('sanctum')->user()->user_id;
+        $data = $this->orderService->cancelOrder($userId, $req->only(['token']));
+
+        return response()->json(['data' => $data], 200);
+    }
+
     public function confirmOrder(Request $req)
     {
         $userId = auth('sanctum')->user()->user_id;
@@ -138,10 +146,6 @@ class OrderController extends Controller
         $data = $this->orderService->getOrderDetail($req['order_id']);
 
         return response()->json(['data' => $data], 200);
-    }
-
-    public function getDetailOrder()
-    {
     }
 
     public function getAllOrderByUserId()

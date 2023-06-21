@@ -15,10 +15,11 @@ class CreateTransactionSnap extends Midtrans
     protected $duration;
     protected $category;
     protected $assistantFullname;
+    protected $midtrans;
 
     public function __construct($orderId, $totalPrice, $customerName, $customerEmail, $customerPhone, $assistantId, $duration, $category, $assistantFullname)
     {
-        parent::__construct();
+        $this->midtrans = parent::__construct();
 
         $this->orderId = $orderId;
         $this->totalPrice = $totalPrice;
@@ -77,5 +78,10 @@ class CreateTransactionSnap extends Midtrans
         $paymentUrl = Snap::createTransaction($params);
 
         return $paymentUrl;
+    }
+
+    public function a()
+    {
+        Midtrans::cancelTransaction("ss");
     }
 }
