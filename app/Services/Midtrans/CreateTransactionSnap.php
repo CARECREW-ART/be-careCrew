@@ -49,6 +49,7 @@ class CreateTransactionSnap extends Midtrans
 
         //price
         $price = ($this->totalPrice / $this->duration);
+        dd($this->totalPrice);
 
         $params = [
             'transaction_details' => [
