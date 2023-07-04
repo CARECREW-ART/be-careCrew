@@ -49,7 +49,6 @@ class CreateTransactionSnap extends Midtrans
 
         //price
         $price = ($this->totalPrice / $this->duration);
-        dd($this->totalPrice);
 
         $params = [
             'transaction_details' => [
@@ -59,7 +58,7 @@ class CreateTransactionSnap extends Midtrans
             "item_details" => [[
                 "id" => $this->assistantId,
                 "price" => $price,
-                "quantity" => 1,
+                "quantity" => $this->duration,
                 "name" => "({$this->category}) " . $this->assistantFullname,
                 "brand" => "CareCrew",
                 "category" => $this->category,
