@@ -69,6 +69,12 @@ class CreateTransactionSnap extends Midtrans
                 'email' => $this->customerEmail,
                 'phone' => $this->customerPhone,
             ],
+            "enabled_payments" => [
+                "bca_va",
+                "gopay",
+                "shopeepay",
+                "credit_card"
+            ],
             "expiry" => [
                 "unit" => "minutes",
                 "duration" => 30
