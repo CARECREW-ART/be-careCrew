@@ -79,9 +79,4 @@ class CreateTransactionSnap extends Midtrans
 
         return $paymentUrl;
     }
-
-    public function a()
-    {
-        Midtrans::cancelTransaction("ss");
-    }
 }
