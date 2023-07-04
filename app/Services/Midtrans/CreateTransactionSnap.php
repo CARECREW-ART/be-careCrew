@@ -16,6 +16,7 @@ class CreateTransactionSnap extends Midtrans
     protected $category;
     protected $assistantFullname;
     protected $midtrans;
+    protected $price;
 
     public function __construct($orderId, $totalPrice, $customerName, $customerEmail, $customerPhone, $assistantId, $duration, $category, $assistantFullname)
     {
