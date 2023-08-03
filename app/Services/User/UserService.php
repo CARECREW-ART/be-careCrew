@@ -179,9 +179,8 @@ class UserService
         try {
             DB::beginTransaction();
             $otp = PasswordResetToken::where('email', $email);
-            $otp->update([
-                'expire_otp_code' => null
-            ]);
+            $otp->delete();
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
