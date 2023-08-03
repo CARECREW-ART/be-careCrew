@@ -10,6 +10,7 @@ use App\Services\Authentication\AuthenticationService;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use PragmaRX\Google2FA\Google2FA;
 
 class AuthenticationController extends Controller
 {
