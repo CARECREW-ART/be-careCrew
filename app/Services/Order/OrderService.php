@@ -235,7 +235,7 @@ class OrderService
             'total_price',
             'snap_token',
             'created_at'
-        )->get();
+        )->latest()->get();
 
         foreach ($dataOrder as $rQuery) {
             if ($rQuery['mAssistant']['mAssistantPicture'] == null) {
