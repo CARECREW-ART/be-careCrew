@@ -135,13 +135,12 @@ class UserService
             ]);
 
             DB::commit();
+            return true;
         } catch (Exception $e) {
             DB::rollBack();
 
             throw new Exception($e->getMessage(), 500);
         }
-
-        return true;
     }
 
     public function getOTPCodeByEmail($email)
