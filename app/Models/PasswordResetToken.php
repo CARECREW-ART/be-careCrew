@@ -15,5 +15,7 @@ class PasswordResetToken extends Model
         'expire_otp_code'
     ];
 
+    public $timestamps = false;
+
     protected $primaryKey = 'email';
 }
