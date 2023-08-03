@@ -67,8 +67,7 @@ class AuthenticationController extends Controller
 
         $user = $this->userService->userExistByEmail($req->email);
 
-        $google2fa = app(Google2FA::class);
-        $otpCode = $google2fa->generateSecretKey();
+        $otpCode = random_int(000000, 999999);
 
         $bool = $this->userService->storeOTPCode($otpCode, $user->email);
 
