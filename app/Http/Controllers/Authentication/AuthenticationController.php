@@ -4,8 +4,12 @@ namespace App\Http\Controllers\Authentication;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Authentication\AuthenticationLoginRequest as AuthLogReq;
+use App\Http\Requests\Authentication\ResetPasswordRequest;
+use App\Mail\ResetPasswordOTP;
 use App\Services\Authentication\AuthenticationService;
 use App\Services\User\UserService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class AuthenticationController extends Controller
 {
@@ -52,5 +56,45 @@ class AuthenticationController extends Controller
         [$message] = $this->authenticationService->deleteTokenUser($user);
 
         return response()->json(['message' => $message], 200);
+    }
+
+    public function sendLinkOTP(Request $req)
+    {
+        $req->validate([
+            'email' => 'required|email|exists:users,email'
+        ]);
+
+        $user = $this->userService->userExistByEmail($req->email);
+
+        $google2fa = app(Google2FA::class);
+        $otpCode = $google2fa->generateSecretKey();
+
+        $bool = $this->userService->storeOTPCode($otpCode, $user->email);
+
+        if ($bool == true) Mail::to($user->email)->send(new ResetPasswordOTP($otpCode));
+
+        return response()->json(['message' => 'OTP code sent to your email.'], 200);
+    }
+
+    public function resetPassword(ResetPasswordRequest $req)
+    {
+        $dataValidReq = $req->validated();
+
+        $user = $this->userService->userExistByEmail($dataValidReq['email']);
+
+        $otp = $this->userService->getOTPCodeByEmail($user->email);
+
+        if ($otp->otp_code !== $dataValidReq['otp_code'] && now()->gte($otp->expire_otp_code)) {
+            return response()->json(['message' => 'Invalid OTP code.'], 422);
+        }
+
+        $bool = $this->userService->storeNewPasswordUser($user->email, $dataValidReq['password']);
+
+        if ($bool == true) {
+            $this->userService->changeOTPExpireToNull($user->email);
+            return response()->json(['message' => 'Password reset successful.'], 200);
+        }
+
+        return response()->json(['message' => 'Error'], 500);
     }
 }

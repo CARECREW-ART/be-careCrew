@@ -4,6 +4,7 @@ namespace App\Services\User;
 
 use App\Exceptions\CustomInvariantException;
 use App\Exceptions\NotFoundException;
+use App\Models\PasswordResetToken;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Error;
@@ -102,6 +103,85 @@ class UserService
             $dataUser = User::where('user_id', $userId);
             $dataUser->update([
                 'password' => $hashedPassword
+            ]);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            throw new Exception($e->getMessage(), 500);
+        }
+    }
+
+    public function userExistByEmail($email)
+    {
+        $user = User::where('email', $email)->first();
+
+        if ($user == null) {
+            throw new NotFoundException("Data User Tidak Ditemukan");
+        }
+
+        return $user;
+    }
+
+    public function storeOTPCode($otpCode, $email)
+    {
+        try {
+            DB::beginTransaction();
+
+            PasswordResetToken::create([
+                'email' => $email,
+                'otp_code' => $otpCode,
+                'expire_otp_code' => now()->addMinutes(10)
+            ]);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            throw new Exception($e->getMessage(), 500);
+        }
+
+        return true;
+    }
+
+    public function getOTPCodeByEmail($email)
+    {
+        $otp = PasswordResetToken::where('email', $email)->first();
+
+        if ($otp == null) {
+            throw new NotFoundException("OTP Tidak Ditemukan");
+        }
+
+        return $otp;
+    }
+
+    public function storeNewPasswordUser($email, $password)
+    {
+        $hashedPassword = Hash::make($password, ['rounds' => 12]);
+
+        try {
+            DB::beginTransaction();
+            $dataUser = User::where('email', $email);
+            $dataUser->update([
+                'password' => $hashedPassword
+            ]);
+            DB::commit();
+
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            throw new Exception($e->getMessage(), 500);
+        }
+    }
+
+    public function changeOTPExpireToNull($email)
+    {
+        try {
+            DB::beginTransaction();
+            $otp = PasswordResetToken::where('email', $email);
+            $otp->update([
+                'expire_otp_code' => null
             ]);
             DB::commit();
         } catch (Exception $e) {
