@@ -85,9 +85,7 @@ class AuthenticationController extends Controller
 
         $otp = $this->userService->getOTPCodeByEmail($user->email);
 
-        dd(Hash::check($dataValidReq['otp_code'], $otp->otp_code));
-
-        if (Hash::check($dataValidReq['otp_code'], $otp->otp_code)  || now()->gte($otp->expire_otp_code)) {
+        if (!(Hash::check($dataValidReq['otp_code'], $otp->otp_code)  || now()->gte($otp->expire_otp_code))) {
             return response()->json(['message' => 'Invalid OTP code.'], 422);
         }
 
