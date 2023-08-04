@@ -9,6 +9,7 @@ use App\Mail\ResetPasswordOTP;
 use App\Services\Authentication\AuthenticationService;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use PragmaRX\Google2FA\Google2FA;
 
@@ -84,7 +85,7 @@ class AuthenticationController extends Controller
 
         $otp = $this->userService->getOTPCodeByEmail($user->email);
 
-        if ($otp->otp_code !== $dataValidReq['otp_code'] || now()->gte($otp->expire_otp_code)) {
+        if (Hash::check($dataValidReq['otp_code'], $otp->otp_code)  || now()->gte($otp->expire_otp_code)) {
             return response()->json(['message' => 'Invalid OTP code.'], 422);
         }
 

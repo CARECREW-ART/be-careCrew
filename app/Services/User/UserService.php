@@ -128,9 +128,18 @@ class UserService
         try {
             DB::beginTransaction();
 
+            $otp = $this->getOTPCodeByEmail($email);
+
+            if ($otp !== null) {
+                $otp->update([
+                    'otp_code' => Hash::make($otpCode, ['rounds' => 12]),
+                    'expire_otp_code' => now()->addMinutes(10)
+                ]);
+            }
+
             PasswordResetToken::create([
                 'email' => $email,
-                'otp_code' => $otpCode,
+                'otp_code' => Hash::make($otpCode, ['rounds' => 12]),
                 'expire_otp_code' => now()->addMinutes(10)
             ]);
 
