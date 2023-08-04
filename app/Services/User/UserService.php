@@ -128,7 +128,7 @@ class UserService
         try {
             DB::beginTransaction();
 
-            $otp = $this->getOTPCodeByEmail($email);
+            $otp = PasswordResetToken::where('email', $email)->first();
 
             if ($otp !== null) {
                 $otp->update([
